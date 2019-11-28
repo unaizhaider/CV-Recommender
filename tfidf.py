@@ -104,6 +104,11 @@ def tfidf(n):
 def index():
     return "Hello"
 
+@app.route('/test',methods=['POST'])
+def test():
+    req=request.get_json()
+    return req
+
 @app.route('/submitCV')
 def submitCV():
     resume = request.args['cv']
