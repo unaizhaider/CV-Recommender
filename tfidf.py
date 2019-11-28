@@ -223,7 +223,7 @@ def allJds():
     return dumps(x)
 
 @app.route('/delJd')
-def allJds():
+def delJd():
     uid = request.args['uid']
     #select
     jobde=db["Job_Description"]
