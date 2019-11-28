@@ -2,7 +2,7 @@ import io
 import re
 import nltk
 import pandas as pd
-import docx2txt
+#import docx2txt
 from datetime import datetime
 from dateutil import relativedelta
 from spacy.matcher import Matcher
@@ -501,38 +501,12 @@ def extract_text_from_pdf(pdf_path):
             return
 
 
-def extract_text_from_docx(doc_path):
-
-    try:
-        temp = docx2txt.process(doc_path)
-        text = [line.replace('\t', ' ') for line in temp.split('\n') if line]
-        return ' '.join(text)
-    except KeyError:
-        return ' '
-
-def extract_text_from_doc(doc_path):
-    
-    try:
-        try:
-            import textract
-        except ImportError:
-            return ' '
-        temp = textract.process(doc_path).decode('utf-8')
-        text = [line.replace('\t', ' ') for line in temp.split('\n') if line]
-        return ' '.join(text)
-    except KeyError:
-        return ' '
-
 def extract_text(file_path, extension):
     
     text = ''
     if extension == '.pdf':
         for page in extract_text_from_pdf(file_path):
             text += ' ' + page
-    elif extension == '.docx':
-        text = extract_text_from_docx(file_path)
-    elif extension == '.doc':   
-        text = extract_text_from_doc(file_path)
     return text
 
 def extract_entity_sections_grad(text):
