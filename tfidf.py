@@ -11,7 +11,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-from flask import Flask, render_template,request
+from flask import Flask, json,request
 from flask import jsonify 
 from spacy.matcher import Matcher
 import spacy
@@ -104,57 +104,30 @@ def tfidf(n):
 def index():
     return "Hello"
 
-@app.route('/test',methods=['GET'])
+@app.route('/test',methods=['POST'])
 def test():
-    req=request.get_json()
-    return req
+    req=request.get_json(force=True)
+    print(req["first_name"])
+    return req["first_name"]
 
-@app.route('/submitCV')
-def submitCV():
-    resume = request.args['cv']
-    uid = request.args['uid']
-    
-    nlp = spacy.load('en_core_web_sm')
-    matcher = Matcher(nlp.vocab)
-    
-    text_raw    = parser.extract_text('resume.pdf',".pdf")
-    text        = ' '.join(text_raw.split())
-    nlp         = nlp(text)
-    noun_chunks = list(nlp.noun_chunks)
-    
-    name            = parser.extract_name(nlp, matcher=matcher)
-    email           = parser.extract_email(text)
-#    mobile          = parser.extract_mobile_number(text)
-    skills          = parser.extract_skills(nlp, noun_chunks, "skills.csv")
-    edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
-    entities        = parser.extract_entity_sections_professional(text_raw)
-    
-    resume_collection=db["CV"]
-    insert ={   "uid" : uid,
-                "cv" : resume,
-                "name" : name,
-                "email" : email,
-                "skills" : skills,
-                "education" : edu,
-                "entities" : entities
-            }
-    resume_collection.insert_one(insert)
-    return jsonify()
 
 @app.route('/signup')
 def signup():
-    usertype = request.args['type']
-    fname = request.args['fname']
-    lname = request.args['lname']
-    number = request.args['number']
-    gender = request.args['gender']
-    email = request.args['email']
-    age = request.args['age']
-    password = request.args['password']
+    req=request.get_json(force=True)
+    usertype = req['type']
+    fname = req['fname']
+    lname = req['lname']
+    number = req['number']
+    gender = req['gender']
+    email = req['email']
+    age = req['age']
+    password = req['password']
     
-    
+    Job_Provider=db["Job_Provider"]
+    Job_Seeker=db["Job_Seeker"]
+
     if usertype == 'Job Seeker':
-        db.Collection.insertOne(
+        obj_id = Job_Seeker.insertOne(
             {   fname : fname,
                 lname : lname,
                 number : number,
@@ -164,7 +137,7 @@ def signup():
                 password : password
             })
     elif usertype == 'Job Provider':
-       db.Collection.insertOne(
+       obj_id = Job_Provider.insertOne(
             {   fname : fname,
                 lname : lname,
                 number : number,
@@ -175,15 +148,17 @@ def signup():
             })
     else:
         print("Invalid")
+    return obj_id
         
 
 @app.route('/login')
 def login():
-    uname = request.args['uname']
-    password = request.args['password']
+    req=request.get_json(force=True)
+    uname = req['uname']
+    password = req['password']
     #select
 
-    db.collection.find({ username : uname, password : password })
+    db.collection.find({ "email" : uname, "password" : password })
 
     
 @app.route('/profile')
@@ -196,11 +171,12 @@ def profile():
     return dumps(x)
 
 
-@app.route('/jobpost')
+@app.route('/jobpost',methods=['POST'])
 def jobpost():
-    job_titl = request.args['job_title']
-    job_desc = request.args['job_desc']
-    no_cand = request.args['no_cand']
+    req=request.get_json(force=True)
+    job_titl = req['jobTitle']
+    job_desc = req['JD']
+    no_cand = req['EmpNo']
     ##insert
 
     jobde=db["Job_Desc"]
@@ -208,8 +184,8 @@ def jobpost():
                 "desc" : job_desc,
                 "cand" : no_cand
             }
-    jobde.insert_one(insert)
-    return no_cand
+    rid = jobde.insert_one(insert)
+    return rid.inserted_id
     
 
 @app.route('/recommend')
@@ -217,10 +193,10 @@ def recommend():
     job_id = request.args['job_id']
     recommended = tfidf()
 
-@app.route('/allJds')
+@app.route('/allJds',methods=['POST'])
 def allJds():
-    uid = request.args['uid']
-    #select
+    req=request.get_json(force=True)
+    uid = req['uid']
     jobde=db["Job_Desc"]
 
     x = jobde.find({"cand" : "30"})
@@ -235,9 +211,40 @@ def delJd():
 
     x = jobde.find({"cand" : "30"})
     
-    return dumps(x)
+    return dumps(x['_id'])
 
+@app.route('/submitCV',methods=['POST'])
+def submitCV():
+    req=request.get_json(force=True)
+    resume = req['cv']
+    uid = req['uid']
     
+    nlp = spacy.load('en_core_web_sm')
+    matcher = Matcher(nlp.vocab)
+    
+    text_raw    = parser.extract_text('resume.pdf',".pdf")
+    text        = ' '.join(text_raw.split())
+    nlp         = nlp(text)
+    noun_chunks = list(nlp.noun_chunks)
+    
+    name            = parser.extract_name(nlp, matcher=matcher)
+    email           = parser.extract_email(text)
+    skills          = parser.extract_skills(nlp, noun_chunks, "skills.csv")
+    edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
+    entities        = parser.extract_entity_sections_professional(text_raw)
+    
+    resume_collection=db["CV"]
+    insert ={   "uid" : uid,
+                "cv" : resume,
+                "name" : name,
+                "email" : email,
+                "skills" : skills,
+                "education" : edu,
+                "entities" : entities
+            }
+    resume_collection.insert_one(insert)
+    return jsonify(insert)
+
     
 if __name__ == '__main__':
     app.run()
