@@ -104,7 +104,7 @@ def tfidf(n):
 def index():
     return "Hello"
 
-@app.route('/test',methods=['POST'])
+@app.route('/test',methods=['GET'])
 def test():
     req=request.get_json()
     return req
