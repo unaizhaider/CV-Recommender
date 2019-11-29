@@ -128,37 +128,42 @@ def signup():
 
     if usertype == 'Job Seeker':
         obj_id = Job_Seeker.insertOne(
-            {   fname : fname,
-                lname : lname,
-                number : number,
-                gender : gender,
-                email : email,
-                age : age,
-                password : password
+            {   "fname" : fname,
+                "lname" : lname,
+                "number" : number,
+                "gender" : gender,
+                "email" : email,
+                "age" : age,
+                "password" : password,
+                "cv" : ""
             })
+        return dumps(obj_id.inserted_id)
     elif usertype == 'Job Provider':
        obj_id = Job_Provider.insertOne(
-            {   fname : fname,
-                lname : lname,
-                number : number,
-                gender : gender,
-                email : email,
-                age : age,
-                password : password
+            {   "fname" : fname,
+                "lname" : lname,
+                "number" : number,
+                "gender" : gender,
+                "email" : email,
+                "age" : age,
+                "password" : password
             })
+       return dumps(obj_id.inserted_id)
     else:
         print("Invalid")
-    return obj_id
+    return "Error in signup"
         
 
-@app.route('/login')
+@app.route('/login',methods=['POST'])
 def login():
     req=request.get_json(force=True)
     uname = req['uname']
     password = req['password']
     #select
-
-    db.collection.find({ "email" : uname, "password" : password })
+    jobde=db["Job_Desc"]
+    obj_id = jobde.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    #print(dumps(obj_id))
+    return dumps(obj_id)
 
     
 @app.route('/profile')
@@ -174,13 +179,14 @@ def profile():
 @app.route('/jobpost',methods=['POST'])
 def jobpost():
     req=request.get_json(force=True)
+    #pid = req['jpid']
     job_titl = req['jobTitle']
     job_desc = req['JD']
     no_cand = req['EmpNo']
-    ##insert
 
     jobde=db["Job_Desc"]
-    insert ={   "job_title" : job_titl,
+    insert ={   #jpid" : pid,   
+                "job_title" : job_titl,
                 "desc" : job_desc,
                 "cand" : no_cand
             }
