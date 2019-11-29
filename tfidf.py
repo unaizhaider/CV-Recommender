@@ -28,6 +28,11 @@ CORS(app,support_credentials=True)
 client = pym.MongoClient('mongodb://localhost:27017/')
 db = client.test
 
+Job_Description=db["Job_Description"]
+Job_Provider=db["Job_Provider"]
+Job_Seeker=db["Job_Seeker"]
+resume=db["CV_att"]
+
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
@@ -115,7 +120,8 @@ def test():
     return req["first_name"]
 
 
-@app.route('/signup')
+@app.route('/signup',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def signup():
     req=request.get_json(force=True)
     usertype = req['type']
@@ -127,9 +133,6 @@ def signup():
     age = req['age']
     password = req['password']
     
-    Job_Provider=db["Job_Provider"]
-    Job_Seeker=db["Job_Seeker"]
-
     if usertype == 'Job Seeker':
         obj_id = Job_Seeker.insertOne(
             {   "fname" : fname,
@@ -158,25 +161,33 @@ def signup():
     return "Error in signup"
         
 
-@app.route('/login',methods=['POST'])
+@app.route('/login',methods=['POST','GET'])
+@cross_origin(supports_credentials=True)
 def login():
     req=request.get_json(force=True)
-    uname = req['uname']
+    uname = req['username']
     password = req['password']
-    #select
-    jobde=db["Job_Desc"]
-    obj_id = jobde.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    #print(dumps(obj_id))
-    return dumps(obj_id)
+    
+    obj_id = Job_Seeker.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    if(obj_id):
+        return dumps(obj_id)
+    elif (obj_id2):
+        return dumps(obj_id2)
+    return "Error"
 
     
-@app.route('/profile')
+@app.route('/profile',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def profile():
-    user_id = request.args['user_id']
-    jobde=db["Job_Desc"]
-
-    x = jobde.find({"_id": ObjectId(user_id)})
+    req=request.get_json(force=True)
+    user_id = req['user_id']
+    user_type = req['type']
     
+    if user_type == "Job Provider":
+        x = Job_Provider.find({"_id": ObjectId(user_id)})
+    else:
+        x = Job_Seeker.find({"_id": ObjectId(user_id)})
     return dumps(x)
 
 
@@ -184,54 +195,59 @@ def profile():
 @cross_origin(supports_credentials=True)
 def jobpost():
     req=request.get_json(force=True)
-    #pid = req['jpid']
+    pid = req['jpid']
     job_titl = req['jobTitle']
     job_desc = req['JD']
     no_cand = req['empNo']
 
-    jobde=db["Job_Desc"]
-    insert ={   #jpid" : pid,   
+    insert ={  "jpid" : pid,   
                "job_title" : job_titl,
                "desc" : job_desc,
                "cand" : no_cand
             }
-    rid = jobde.insert_one(insert)
+    rid = Job_Description.insert_one(insert)
     return dumps(rid.inserted_id)
     
 
-@app.route('/recommend')
+@app.route('/recommend',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def recommend():
     req=request.get_json(force=True)
     job_id = req['job_id']
-    jobde=db["Job_Desc"]
-    x = list(jobde.find({},{"jpid" : job_id}))
+    x = list(Job_Description.find({},{"jpid" : job_id}))
     
-    recommended = tfidf()
+    #recommended = tfidf(x[0])
+    
 
 @app.route('/allJds',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def allJds():
     req=request.get_json(force=True)
     uid = req['uid']
-    jobde=db["Job_Desc"]
 
-    x = jobde.find({"cand" : "30"})
+    x = Job_Description.find({"jpid" : uid})
     
     return dumps(x)
 
-@app.route('/delJd')
-def delJd():
-    uid = request.args['uid']
-    #select
-    jobde=db["Job_Description"]
 
-    x = jobde.find({"cand" : "30"})
+
+@app.route('/delJd')
+@cross_origin(supports_credentials=True)
+def delJd():
+    req=request.get_json(force=True)
+    
+    #uid = req['uid']
+    obj = req['obj_id']
+    
+    x = Job_Description.find({"_id": ObjectId(obj)})
     
     return dumps(x['_id'])
 
 @app.route('/submitCV',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def submitCV():
     req=request.get_json(force=True)
-    resume = req['cv']
+    resume = request.files['file']
     uid = req['uid']
     
     nlp = spacy.load('en_core_web_sm')
