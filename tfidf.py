@@ -187,7 +187,7 @@ def jobpost():
     #pid = req['jpid']
     job_titl = req['jobTitle']
     job_desc = req['JD']
-    no_cand = req['EmpNo']
+    no_cand = req['empNo']
 
     jobde=db["Job_Desc"]
     insert ={   #jpid" : pid,   
@@ -196,7 +196,7 @@ def jobpost():
                "cand" : no_cand
             }
     rid = jobde.insert_one(insert)
-    return "ok"
+    return dumps(rid)
     
 
 @app.route('/recommend')
