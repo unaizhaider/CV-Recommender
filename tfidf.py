@@ -178,11 +178,11 @@ def profile():
 
 @app.route('/jobpost',methods=['POST'])
 def jobpost():
-    req=request.get_json(force=True)
+    #req=request.get_json(force=True)
     #pid = req['jpid']
-    job_titl = req['jobTitle']
-    job_desc = req['JD']
-    no_cand = req['EmpNo']
+    #job_titl = req['jobTitle']
+    #job_desc = req['JD']
+    #no_cand = req['EmpNo']
 
     #jobde=db["Job_Desc"]
     #insert ={   #jpid" : pid,   
