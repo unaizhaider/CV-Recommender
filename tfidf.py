@@ -181,6 +181,7 @@ def profile():
 
 
 @app.route('/jobpost',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def jobpost():
     req=request.get_json(force=True)
     #pid = req['jpid']
@@ -188,13 +189,13 @@ def jobpost():
     job_desc = req['JD']
     no_cand = req['EmpNo']
 
-    #jobde=db["Job_Desc"]
-    #insert ={   #jpid" : pid,   
-   #             "job_title" : job_titl,
-   #             "desc" : job_desc,
-   #             "cand" : no_cand
-    #        }
-    #rid = jobde.insert_one(insert)
+    jobde=db["Job_Desc"]
+    insert ={   #jpid" : pid,   
+               "job_title" : job_titl,
+               "desc" : job_desc,
+               "cand" : no_cand
+            }
+    rid = jobde.insert_one(insert)
     return "ok"
     
 
