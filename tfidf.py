@@ -196,7 +196,7 @@ def jobpost():
                "cand" : no_cand
             }
     rid = jobde.insert_one(insert)
-    return dumps(rid)
+    return dumps(rid.inserted_id)
     
 
 @app.route('/recommend')
