@@ -46,7 +46,7 @@ def extract_text_from_pdf(pdf_path):
     if text:
         return text
  
-def tfidf(n):
+def tfidf():
     mypath='F:/Taha/resume-parser-master/resume' #path where resumes are saved
     onlyfiles = [os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
  
@@ -184,19 +184,23 @@ def jobpost():
     job_desc = req['JD']
     no_cand = req['EmpNo']
 
-    jobde=db["Job_Desc"]
-    insert ={   #jpid" : pid,   
-                "job_title" : job_titl,
-                "desc" : job_desc,
-                "cand" : no_cand
-            }
-    rid = jobde.insert_one(insert)
-    return dumps(rid.inserted_id)
+    #jobde=db["Job_Desc"]
+    #insert ={   #jpid" : pid,   
+   #             "job_title" : job_titl,
+   #             "desc" : job_desc,
+   #             "cand" : no_cand
+    #        }
+    #rid = jobde.insert_one(insert)
+    return "ok"
     
 
 @app.route('/recommend')
 def recommend():
-    job_id = request.args['job_id']
+    req=request.get_json(force=True)
+    job_id = req['job_id']
+    jobde=db["Job_Desc"]
+    x = list(jobde.find({},{"jpid" : job_id}))
+    
     recommended = tfidf()
 
 @app.route('/allJds',methods=['POST'])
