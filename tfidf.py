@@ -19,8 +19,11 @@ import Parser as parser
 import pymongo as pym
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+from flask_cors import CORS,cross_origin
+
 
 app = Flask(__name__)
+CORS(app,support_credentials=True)
 
 client = pym.MongoClient('mongodb://localhost:27017/')
 db = client.test
@@ -105,6 +108,7 @@ def index():
     return "Hello"
 
 @app.route('/test',methods=['POST'])
+@cross_origin(supports_credentials=True)
 def test():
     req=request.get_json(force=True)
     print(req["first_name"])
