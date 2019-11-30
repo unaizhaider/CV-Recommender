@@ -168,7 +168,7 @@ def signup():
                 "phone" : phone,
                 "password" : password
             })
-        print("In job seeker")
+       print("In job seeker")
        return "JobRecruiter"
     else:
         print("Invalid")
