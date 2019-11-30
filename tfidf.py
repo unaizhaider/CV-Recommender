@@ -20,15 +20,19 @@ import pymongo as pym
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from flask_cors import CORS,cross_origin
+from flask_jwt_extended import JWTManager 
+from flask_jwt_extended import create_access_token
 
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'secret'
+jwt = JWTManager(app)
 CORS(app,support_credentials=True)
 
 client = pym.MongoClient('mongodb://localhost:27017/')
 db = client.test
 
-Job_Description=db["Job_Description"]
+Job_Description=db["Job_Desc"]
 Job_Provider=db["Job_Provider"]
 Job_Seeker=db["Job_Seeker"]
 resume=db["CV_att"]
@@ -116,8 +120,15 @@ def index():
 @cross_origin(supports_credentials=True)
 def test():
     req=request.get_json(force=True)
-    print(req["first_name"])
-    return req["first_name"]
+    uname = req['username']
+    password = req['password']
+    
+    obj_id = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    #obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    #print (obj_id.get('_id'))
+    
+    return dumps(obj_id)
+ 
 
 
 @app.route('/signup',methods=['POST'])
@@ -125,51 +136,52 @@ def test():
 def signup():
     req=request.get_json(force=True)
     usertype = req['type']
-    fname = req['fname']
-    lname = req['lname']
-    number = req['number']
+    fname = req['firstname']
+    lname = req['lastname']
     gender = req['gender']
     email = req['email']
     age = req['age']
+    phone = req['phone']
     password = req['password']
     
-    if usertype == 'Job Seeker':
+    if usertype == 'jobApplicant':
         obj_id = Job_Seeker.insertOne(
-            {   "fname" : fname,
-                "lname" : lname,
-                "number" : number,
+            {   "firstname" : fname,
+                "lastname" : lname,
                 "gender" : gender,
                 "email" : email,
                 "age" : age,
+                "phone" : phone,
                 "password" : password,
                 "cv" : ""
             })
-        return dumps(obj_id.inserted_id)
-    elif usertype == 'Job Provider':
+        return "JobApplicant"
+    elif usertype == 'jobRecruiter':
        obj_id = Job_Provider.insertOne(
             {   "fname" : fname,
                 "lname" : lname,
-                "number" : number,
                 "gender" : gender,
                 "email" : email,
                 "age" : age,
+                "phone" : phone,
                 "password" : password
             })
-       return dumps(obj_id.inserted_id)
+       return "JobRecruiter"
     else:
         print("Invalid")
     return "Error in signup"
         
 
-@app.route('/login',methods=['POST','GET'])
+@app.route('/login',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
     req=request.get_json(force=True)
     uname = req['username']
     password = req['password']
     
-    obj_id = Job_Seeker.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "cand" : password }]})
     obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    
     if(obj_id):
         return dumps(obj_id)
     elif (obj_id2):
