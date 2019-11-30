@@ -182,10 +182,10 @@ def login():
     password = req['password']
     print(uname)
     print(password)
-    obj_id = Job_Seeker.find_one({ "email" : uname})
-    obj_id2 = Job_Provider.find_one({ "email" : uname})
-    print(dumps(obj_id))
-    print(dumps(obj_id2))
+    obj_id = Job_Seeker.find({ "email" : uname})
+    obj_id2 = Job_Provider.find({ "email" : uname})
+    #print(dumps(obj_id))
+    #print(dumps(obj_id2))
     if(obj_id):
         return dumps(obj_id)
     elif (obj_id2):
