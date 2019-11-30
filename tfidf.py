@@ -134,6 +134,7 @@ def test():
 @app.route('/signup',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def signup():
+    print("JHSJ")
     req=request.get_json(force=True)
     usertype = req['type']
     fname = req['firstname']
@@ -155,17 +156,19 @@ def signup():
                 "password" : password,
                 "cv" : ""
             })
+        print("Job applicant")
         return "JobApplicant"
-    elif usertype == 'jobRecruiter':
+    elif usertype == 'Recruiter':
        obj_id = Job_Provider.insertOne(
-            {   "fname" : fname,
-                "lname" : lname,
+            {   "firstname" : fname,
+                "lastname" : lname,
                 "gender" : gender,
                 "email" : email,
                 "age" : age,
                 "phone" : phone,
                 "password" : password
             })
+        print("In job seeker")
        return "JobRecruiter"
     else:
         print("Invalid")
@@ -179,8 +182,8 @@ def login():
     uname = req['username']
     password = req['password']
     
-    obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "cand" : password }]})
-    obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "password" : password }]})
+    obj_id2 = Job_Provider.find({"$and":[{ "email" : uname},{ "password" : password }]})
     
     if(obj_id):
         return dumps(obj_id)
