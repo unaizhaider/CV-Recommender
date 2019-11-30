@@ -127,7 +127,7 @@ def test():
     #obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
     #print (obj_id.get('_id'))
     
-    return dumps(obj_id)
+    return jsonify({"F" :dumps(obj_id)})
  
 
 
@@ -186,9 +186,9 @@ def login():
     obj_id2 = Job_Provider.find({"$and":[{ "email" : uname},{ "password" : password }]})
     
     if(obj_id):
-        return dumps(obj_id)
+        return jsonify({"token" :dumps(obj_id)})
     elif (obj_id2):
-        return dumps(obj_id2)
+        return jsonify({"token" :dumps(obj_id)})
     return "Error"
 
     
