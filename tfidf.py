@@ -183,13 +183,13 @@ def login():
     print(uname)
     print(password)
     obj_id = Job_Seeker.find({"email" : uname})
-    obj_id2 = Job_Provider.find({"email" : uname})
+    obj_id2 = Job_Provider.find_one({"email" : uname})
     print(dumps(obj_id))
     print(dumps(obj_id2))
     if(obj_id):
-        return make_response(dumps(obj_id), 200)
+        return dumps(obj_id)
     elif (obj_id2):
-        return make_response(dumps(obj_id2), 200)
+        return dumps(obj_id2)
     return "Error"
 
     
