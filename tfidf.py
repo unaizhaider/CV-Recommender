@@ -116,7 +116,18 @@ def tfidf():
 def index():
     return "Hello"
 
-
+@app.route('/test',methods=['POST'])
+@cross_origin(supports_credentials=True)
+def test():
+    req=request.get_json(force=True)
+    uname = req['username']
+    password = req['password']
+    
+    response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+    print(dumps(response))
+    return make_response(dumps(response), 200)
+    #return jsonify({"F" :dumps(obj_id)})
+ 
 
 
 @app.route('/signup',methods=['POST'])
@@ -171,8 +182,8 @@ def login():
     password = req['password']
     print(uname)
     print(password)
-    obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "password" : password }]})
-    obj_id2 = Job_Provider.find({"$and":[{ "email" : uname},{ "password" : password }]})
+    obj_id = Job_Seeker.find({},{"email" : uname})
+    obj_id2 = Job_Provider.find({},{"email" : uname})
     print(dumps(obj_id))
     print(dumps(obj_id2))
     if(obj_id):
