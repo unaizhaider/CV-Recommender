@@ -116,18 +116,7 @@ def tfidf():
 def index():
     return "Hello"
 
-@app.route('/test',methods=['POST'])
-@cross_origin(supports_credentials=True)
-def test():
-    req=request.get_json(force=True)
-    uname = req['username']
-    password = req['password']
-    
-    response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    print(dumps(response))
-    return make_response(dumps(response), 200)
-    #return jsonify({"F" :dumps(obj_id)})
- 
+
 
 
 @app.route('/signup',methods=['POST'])
