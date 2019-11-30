@@ -146,7 +146,7 @@ def signup():
     password = req['password']
     
     if usertype == 'jobApplicant':
-        obj_id = Job_Seeker.insertOne(
+        obj_id = Job_Seeker.insert_one(
             {   "firstname" : fname,
                 "lastname" : lname,
                 "gender" : gender,
@@ -159,7 +159,7 @@ def signup():
         print("Job applicant")
         return "JobApplicant"
     elif usertype == 'Recruiter':
-       obj_id = Job_Provider.insertOne(
+       obj_id = Job_Provider.insert_one(
             {   "firstname" : fname,
                 "lastname" : lname,
                 "gender" : gender,
