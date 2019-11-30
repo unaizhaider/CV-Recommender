@@ -182,8 +182,8 @@ def login():
     password = req['password']
     print(uname)
     print(password)
-    obj_id = Job_Seeker.find({"email" : uname})
-    obj_id2 = Job_Provider.find_one({"email" : uname})
+    obj_id = Job_Seeker.find_one({"$and":[{ "email" : uname},{ "password" : password }]})
+    obj_id2 = Job_Provider.find_one({"$and":[{ "email" : uname},{ "password" : password }]})
     print(dumps(obj_id))
     print(dumps(obj_id2))
     if(obj_id):
