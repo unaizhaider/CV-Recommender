@@ -124,7 +124,7 @@ def test():
     password = req['password']
     
     response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    
+    print(dumps(response))
     return make_response(dumps(response), 200)
     #return jsonify({"F" :dumps(obj_id)})
  
@@ -184,7 +184,7 @@ def login():
     print(password)
     obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "password" : password }]})
     obj_id2 = Job_Provider.find({"$and":[{ "email" : uname},{ "password" : password }]})
-    
+    print(dumps(obj_id))
     if(obj_id):
         return make_response(dumps(obj_id), 200)
     elif (obj_id2):
