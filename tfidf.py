@@ -187,9 +187,9 @@ def login():
     #print(dumps(obj_id))
     #print(dumps(obj_id2))
     if(obj_id):
-        return dumps(obj_id)
+        return make_response(dumps(obj_id), 200)
     elif (obj_id2):
-        return dumps(obj_id2)
+        return make_response(dumps(obj_id2), 200)
     return "Error"
 
     
