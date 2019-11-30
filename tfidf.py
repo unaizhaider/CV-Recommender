@@ -11,7 +11,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-from flask import Flask, json,request
+from flask import Flask, json,request,make_response
 from flask import jsonify 
 from spacy.matcher import Matcher
 import spacy
@@ -123,11 +123,10 @@ def test():
     uname = req['username']
     password = req['password']
     
-    obj_id = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    #obj_id2 = Job_Provider.find({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    #print (obj_id.get('_id'))
+    response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
     
-    return jsonify({"F" :dumps(obj_id)})
+    return make_response(dumps(response), 200)
+    #return jsonify({"F" :dumps(obj_id)})
  
 
 
@@ -181,14 +180,15 @@ def login():
     req=request.get_json(force=True)
     uname = req['username']
     password = req['password']
-    
+    print(uname)
+    print(password)
     obj_id = Job_Seeker.find({"$and":[{ "email" : uname},{ "password" : password }]})
     obj_id2 = Job_Provider.find({"$and":[{ "email" : uname},{ "password" : password }]})
     
     if(obj_id):
-        return jsonify({"token" :dumps(obj_id)})
+        return make_response(dumps(obj_id), 200)
     elif (obj_id2):
-        return jsonify({"token" :dumps(obj_id)})
+        return make_response(dumps(obj_id2), 200)
     return "Error"
 
     
