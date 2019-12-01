@@ -11,7 +11,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-from flask import Flask, json,request,make_response
+from flask import Flask,request,make_response
 from flask import jsonify 
 from spacy.matcher import Matcher
 import spacy
@@ -23,6 +23,7 @@ from flask_cors import CORS,cross_origin
 from flask_jwt_extended import JWTManager 
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
+import json
 #from flask_pymongo import PyMongo 
 
 app = Flask(__name__)
@@ -43,7 +44,7 @@ Job_Provider=db["Job_Provider"]
 Job_Seeker=db["Job_Seeker"]
 resume=db["CV_att"]
 
-class JSONEncoder(json.JSONEncoder):
+class Encoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
@@ -290,7 +291,7 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     print(dumps(x))
-    return jsonify(dumps(x))
+    return json.dumps(x, cls=Encoder)
 
 
 
