@@ -46,11 +46,29 @@ Job_Provider=db["Job_Provider"]
 Job_Seeker=db["Job_Seeker"]
 resume=db["CV_att"]
 
-class Encoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
+
+def js_list(encoder, data):
+    pairs = []
+    for v in data:
+        pairs.append(js_val(encoder, v))
+    return "[" + ", ".join(pairs) + "]"
+
+def js_dict(encoder, data):
+    pairs = []
+    for k, v in data.iteritems():
+        pairs.append(k + ": " + js_val(encoder, v))
+    return "{" + ", ".join(pairs) + "}"
+
+def js_val(encoder, data):
+    if isinstance(data, dict):
+        val = js_dict(encoder, data)
+    elif isinstance(data, list):
+        val = js_list(encoder, data)
+    else:
+        val = encoder.encode(data)
+    return val
+
+
     
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
@@ -296,7 +314,9 @@ def allJds():
     for doc in x:
         json_doc = json.dumps(doc, default=json_util.default)
         json_docs.append(json_doc)
-    return jsonify(json_docs)
+    encoder = json.JSONEncoder(ensure_ascii=False)
+    
+    return jsonify(js_val(encoder, json_docs))
 
 
 
