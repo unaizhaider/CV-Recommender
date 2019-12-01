@@ -290,7 +290,7 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     print(dumps(x))
-    return json.encode(x, cls=JSONEncoder)
+    return jsonify(x)
 
 
 
