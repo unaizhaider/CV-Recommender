@@ -43,6 +43,12 @@ Job_Provider=db["Job_Provider"]
 Job_Seeker=db["Job_Seeker"]
 resume=db["CV_att"]
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+    
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
@@ -284,7 +290,7 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     print(dumps(x))
-    return dumps(x)
+    return json.encode(x, cls=JSONEncoder)
 
 
 
