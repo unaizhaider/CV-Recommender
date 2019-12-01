@@ -24,7 +24,6 @@ from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
 from flask_pymongo import PyMongo 
-import jwt_decode as dec
 
 app = Flask(__name__)
 #app.config['MONGO_DBNAME'] = 'db'
