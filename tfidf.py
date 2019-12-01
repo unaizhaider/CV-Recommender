@@ -269,8 +269,8 @@ def jobpost():
 @cross_origin(supports_credentials=True)
 def recommend():
     req=request.get_json(force=True)
-    job_id = req['job_id']
-    x = list(Job_Description.find({},{"jpid" : job_id}))
+    req2=request.headers['Authorization']
+    x = list(Job_Description.find({},{"jpid" : req2}))
     
     #recommended = tfidf(x[0])
     
@@ -279,9 +279,9 @@ def recommend():
 @cross_origin(supports_credentials=True)
 def allJds():
     req=request.get_json(force=True)
-    uid = req['email']
+    req2=request.headers['Authorization']
     
-    x = Job_Description.find({"email" : uid})    
+    x = Job_Description.find({"email" : req2})    
     
     return dumps(x)
 
