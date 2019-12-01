@@ -234,21 +234,25 @@ def log():
 def jobpost():
     users = Job_Provider
     req=request.get_json(force=True)
-    #req2=request.headers['email']
+    req2=request.headers['Authorization']
     
     jobtitle = req['jobTitle']
     JD = req['JD']
     cand = req['empNo']
-    print(request.headers)
-    #user_id = users.insert_one(
-    #        {   "job_title" : jobtitle,
-    #            "job_description" : JD,
-    #            "cand" : cand,
-    #            "jp_email" : jp_email
-    #        })
-    #print("Inserted")
-    result = {'job title': jobtitle + ' registered'}
-
+    #print(request.headers)
+    user_id = users.insert_one(
+            {   "job_title" : jobtitle,
+                "job_description" : JD,
+                "cand" : cand,
+                "jp_email" : req2
+            })
+    print("Inserted")
+    #result = {'job title': jobtitle + ' registered'}
+    if user_id:
+        result = {   "job_title" : jobtitle,
+                      "empNo" : cand,
+                      "job_id" : user_id.inserted_id
+                }
     return jsonify({'result' : result})
     
 
