@@ -240,7 +240,7 @@ def log():
 @app.route('/jobpost',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def jobpost():
-    users = Job_Provider
+    users = Job_Description
     req=request.get_json(force=True)
     req2=request.headers['Authorization']
     
