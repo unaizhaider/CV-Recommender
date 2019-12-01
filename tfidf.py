@@ -212,7 +212,7 @@ def log():
             result = jsonify({"error":"Invalid username and password"})
     elif response2:
         if bcrypt.check_password_hash(response2['password'], password):
-            access_token = ({
+            access_token = create_access_token(identity = {
                 'firstname': response2['firstname'],
                 'lastname': response2['lastname'],
                 'email': response2['email'],
