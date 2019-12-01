@@ -22,15 +22,20 @@ from bson.objectid import ObjectId
 from flask_cors import CORS,cross_origin
 from flask_jwt_extended import JWTManager 
 from flask_jwt_extended import create_access_token
+from flask_bcrypt import Bcrypt 
+from flask_pymongo import PyMongo 
 
 
 app = Flask(__name__)
+app.config['MONGO_DBNAME'] = 'db'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/'
 app.config['JWT_SECRET_KEY'] = 'secret'
-jwt = JWTManager(app)
-CORS(app,support_credentials=True)
 
-client = pym.MongoClient('mongodb://localhost:27017/')
-db = client.test
+mongo = PyMongo(app)
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
+
+CORS(app)
 
 Job_Description=db["Job_Desc"]
 Job_Provider=db["Job_Provider"]
@@ -128,6 +133,99 @@ def test():
     return make_response(dumps(response), 200)
     #return jsonify({"F" :dumps(obj_id)})
  
+@app.route('/register', methods=["POST"])
+@cross_origin(supports_credentials=True)
+def register():
+    users = mongo.db.Job_Seeker
+    user2 = mongo.db.Job_Provider
+    req=request.get_json(force=True)
+    usertype = req['type']
+    fname = req['firstname']
+    lname = req['lastname']
+    gender = req['gender']
+    email = req['email']
+    age = req['age']
+    phone = req['phone']
+    password = req['password']
+    password = bcrypt.generate_password_hash(request.get_json()['password']).decode('utf-8')
+
+    if usertype == 'jobApplicant':
+        user_id = users.insert_one(
+            {   "firstname" : fname,
+                "lastname" : lname,
+                "gender" : gender,
+                "email" : email,
+                "age" : age,
+                "phone" : phone,
+                "password" : password,
+                "type" : usertype,
+                "cv" : ""
+            })
+        print("Job applicant")
+        new_user = users.find_one({'_id': user_id})
+        
+    elif usertype == 'Recruiter':
+       user_id = user2.insert_one(
+            {   "firstname" : fname,
+                "lastname" : lname,
+                "gender" : gender,
+                "email" : email,
+                "age" : age,
+                "phone" : phone,
+                "type" : usertype,
+                "password" : password
+            })
+       print("In job seeker")
+       new_user = user2.find_one({'_id': user_id})
+
+    result = {'email': new_user['email'] + ' registered'}
+
+    return jsonify({'result' : result})
+
+@app.route('/login2', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def log():
+    users = mongo.db.Job_Seeker
+    user2 = mongo.db.Job_Provider 
+    req=request.get_json(force=True)
+    email = req['username']
+    password = req['password']
+    result = ""
+
+    response = users.find_one({'email': email})
+    response2 = user2.find_one({'email': email})
+
+    if response:
+        if bcrypt.check_password_hash(response['password'], password):
+            access_token = create_access_token(identity = {
+                'firstname': response['firstname'],
+                'lastname': response['lastname'],
+                'email': response['email'],
+                'gender':response['gender'],
+                'age': response['age'],
+                'phone': response['phone'],
+                'usertype': response['usertype']
+            })
+            result = jsonify({'token':access_token})
+        else:
+            result = jsonify({"error":"Invalid username and password"})
+    elif response2:
+        if bcrypt.check_password_hash(response['password'], password):
+            access_token = create_access_token(identity = {
+                'firstname': response2['firstname'],
+                'lastname': response2['lastname'],
+                'email': response2['email'],
+                'gender':response2['gender'],
+                'age': response2['age'],
+                'phone': response2['phone'],
+                'usertype': response2['usertype']
+            })
+            result = jsonify({'token':access_token})
+        else:
+            result = jsonify({"error":"Invalid username and password"})
+    else:
+        result = jsonify({"result":"No results found"})
+    return result 
 
 
 @app.route('/signup',methods=['POST'])
@@ -182,8 +280,8 @@ def login():
     password = req['password']
     print(uname)
     print(password)
-    obj_id = Job_Seeker.find({ "email" : uname})
-    obj_id2 = Job_Provider.find({ "email" : uname})
+    obj_id = Job_Seeker.find_one({ "email" : uname})
+    obj_id2 = Job_Provider.find_one({ "email" : uname})
     #print(dumps(obj_id))
     #print(dumps(obj_id2))
     if(obj_id):
