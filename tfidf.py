@@ -187,7 +187,8 @@ def register():
 @app.route('/login2', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def log():
-
+    users = Job_Seeker
+    user2 = Job_Provider
     req=request.get_json(force=True)
     email = req['username']
     password = req['password']
