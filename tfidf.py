@@ -279,9 +279,9 @@ def recommend():
 @cross_origin(supports_credentials=True)
 def allJds():
     req=request.get_json(force=True)
-    uid = req['uid']
-
-    x = Job_Description.find({"jpid" : uid})
+    uid = req['email']
+    
+    x = Job_Description.find({"email" : uid})    
     
     return dumps(x)
 
@@ -291,13 +291,13 @@ def allJds():
 @cross_origin(supports_credentials=True)
 def delJd():
     req=request.get_json(force=True)
-    
-    #uid = req['uid']
     obj = req['obj_id']
-    
     x = Job_Description.find({"_id": ObjectId(obj)})
     
-    return dumps(x['_id'])
+    if x:
+        return "Deleted"
+    else:
+        return "Error in deletion"
 
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
