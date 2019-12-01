@@ -184,7 +184,7 @@ def register():
 
     return jsonify({'result' : result})
 
-@app.route('/login2', methods=['POST'])
+@app.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def log():
     users = Job_Seeker
@@ -212,7 +212,7 @@ def log():
         else:
             result = jsonify({"error":"Invalid username and password"})
     elif response2:
-        if bcrypt.check_password_hash(response['password'], password):
+        if bcrypt.check_password_hash(response2['password'], password):
             access_token = create_access_token(identity = {
                 'firstname': response2['firstname'],
                 'lastname': response2['lastname'],
@@ -230,99 +230,26 @@ def log():
     return result 
 
 
-@app.route('/signup',methods=['POST'])
-@cross_origin(supports_credentials=True)
-def signup():
-    print("JHSJ")
-    req=request.get_json(force=True)
-    usertype = req['type']
-    fname = req['firstname']
-    lname = req['lastname']
-    gender = req['gender']
-    email = req['email']
-    age = req['age']
-    phone = req['phone']
-    password = req['password']
-    
-    if usertype == 'jobApplicant':
-        obj_id = Job_Seeker.insert_one(
-            {   "firstname" : fname,
-                "lastname" : lname,
-                "gender" : gender,
-                "email" : email,
-                "age" : age,
-                "phone" : phone,
-                "password" : password,
-                "cv" : ""
-            })
-        print("Job applicant")
-        return "JobApplicant"
-    elif usertype == 'Recruiter':
-       obj_id = Job_Provider.insert_one(
-            {   "firstname" : fname,
-                "lastname" : lname,
-                "gender" : gender,
-                "email" : email,
-                "age" : age,
-                "phone" : phone,
-                "password" : password
-            })
-       print("In job seeker")
-       return "JobRecruiter"
-    else:
-        print("Invalid")
-    return "Error in signup"
-        
-
-@app.route('/login',methods=['POST'])
-@cross_origin(supports_credentials=True)
-def login():
-    req=request.get_json(force=True)
-    uname = req['username']
-    password = req['password']
-    print(uname)
-    print(password)
-    obj_id = Job_Seeker.find_one({ "email" : uname})
-    obj_id2 = Job_Provider.find_one({ "email" : uname})
-    #print(dumps(obj_id))
-    #print(dumps(obj_id2))
-    if(obj_id):
-        return make_response(dumps(obj_id), 200)
-    elif (obj_id2):
-        return make_response(dumps(obj_id2), 200)
-    return "Error"
-
-    
-@app.route('/profile',methods=['POST'])
-@cross_origin(supports_credentials=True)
-def profile():
-    req=request.get_json(force=True)
-    user_id = req['user_id']
-    user_type = req['type']
-    
-    if user_type == "Job Provider":
-        x = Job_Provider.find({"_id": ObjectId(user_id)})
-    else:
-        x = Job_Seeker.find({"_id": ObjectId(user_id)})
-    return dumps(x)
-
-
 @app.route('/jobpost',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def jobpost():
+    users = Job_Provider
     req=request.get_json(force=True)
-    pid = req['jpid']
-    job_titl = req['jobTitle']
-    job_desc = req['JD']
-    no_cand = req['empNo']
+    jp_email = req['email']
+    jobtitle = req['job_title']
+    JD = req['JD']
+    cand = req['no_cand']
 
-    insert ={  "jpid" : pid,   
-               "job_title" : job_titl,
-               "desc" : job_desc,
-               "cand" : no_cand
-            }
-    rid = Job_Description.insert_one(insert)
-    return dumps(rid.inserted_id)
+    user_id = users.insert_one(
+            {   "job_title" : jobtitle,
+                "job_description" : JD,
+                "cand" : cand,
+                "jp_email" : jp_email
+            })
+    print("Inserted")
+    result = {'job title': jobtitle + ' registered'}
+
+    return jsonify({'result' : result})
     
 
 @app.route('/recommend',methods=['POST'])
