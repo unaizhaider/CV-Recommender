@@ -290,9 +290,7 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     print(dumps(x))
-    return jsonify(jobTitle=x.job_title,
-                   empNo=x.cand,
-                   )
+    return jsonify(dumps(x))
 
 
 
