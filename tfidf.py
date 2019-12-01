@@ -275,10 +275,10 @@ def recommend():
     #recommended = tfidf(x[0])
     
 
-@app.route('/allJds',methods=['POST'])
+@app.route('/allJds',methods=['POST','GET'])
 @cross_origin(supports_credentials=True)
 def allJds():
-    req=request.get_json(force=True)
+    #req=request.get_json(force=True)
     req2=request.headers['Authorization']
     
     x = Job_Description.find({"email" : req2})    
