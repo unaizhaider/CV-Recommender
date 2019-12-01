@@ -314,9 +314,9 @@ def allJds():
     for doc in x:
         json_doc = json.dumps(doc, default=json_util.default)
         json_docs.append(json_doc)
-    encoder = json.JSONEncoder(ensure_ascii=False)
+    #encoder = json.JSONEncoder(ensure_ascii=False)
     
-    return jsonify(js_val(encoder, json_docs))
+    return jsonify(json_docs)
 
 
 
