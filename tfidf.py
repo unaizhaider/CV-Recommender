@@ -290,8 +290,12 @@ def allJds():
     req2=request.headers['Authorization']
     print(req2)
     x = users.find({"jp_email" : req2})    
-    print(dumps(x))
-    return json.dumps(x, cls=Encoder)
+    docs = []
+    for doc in x:
+        doc.pop('_id') 
+        doc['_id'] = doc['_id'].toString()
+        docs.append(doc)
+    return jsonify(docs)
 
 
 
