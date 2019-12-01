@@ -279,9 +279,9 @@ def recommend():
 @cross_origin(supports_credentials=True)
 def allJds():
     req=request.get_json(force=True)
-    req2=request.headers['Authorization']
+    email=req['email']
     
-    x = Job_Description.find({"email" : req2})    
+    x = Job_Description.find({"email" : email})    
     
     return dumps(x)
 
