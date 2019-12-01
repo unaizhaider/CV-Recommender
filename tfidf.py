@@ -206,7 +206,7 @@ def log():
                 'gender':response['gender'],
                 'age': response['age'],
                 'phone': response['phone'],
-                'usertype': response['usertype']
+                'usertype': response['type']
             })
             result = jsonify({'token':access_token})
         else:
