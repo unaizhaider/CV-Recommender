@@ -27,20 +27,21 @@ from flask_pymongo import PyMongo
 
 
 app = Flask(__name__)
-app.config['MONGO_DBNAME'] = 'db'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/'
+#app.config['MONGO_DBNAME'] = 'db'
+#app.config['MONGO_URI'] = 'mongodb://localhost:27017/'
+db = pym.MongoClient()
 app.config['JWT_SECRET_KEY'] = 'secret'
 
-mongo = PyMongo(app)
+#mongo = PyMongo(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 CORS(app)
 
-Job_Description="Job_Desc"
-Job_Provider="Job_Provider"
-Job_Seeker="Job_Seeker"
-resume="CV_att"
+Job_Description=db["Job_Desc"]
+Job_Provider=db["Job_Provider"]
+Job_Seeker=db["Job_Seeker"]
+resume=db["CV_att"]
 
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
@@ -136,8 +137,8 @@ def test():
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
 def register():
-    users = mongo.Job_Seeker
-    user2 = mongo.Job_Provider
+    users = Job_Seeker
+    user2 = Job_Provider
     req=request.get_json(force=True)
     usertype = req['type']
     fname = req['firstname']
@@ -185,8 +186,8 @@ def register():
 @app.route('/login2', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def log():
-    users = mongo.Job_Seeker
-    user2 = mongo.Job_Provider 
+    users = db.Job_Seeker
+    user2 = db.Job_Provider 
     req=request.get_json(force=True)
     email = req['username']
     password = req['password']
