@@ -282,7 +282,7 @@ def allJds():
     req2=request.headers['Authorization']
     print(req2)
     x = Job_Description.find({"email" : req2})    
-    print(x)
+    print(dumps(x))
     return dumps(x)
 
 
