@@ -23,7 +23,7 @@ from flask_cors import CORS,cross_origin
 from flask_jwt_extended import JWTManager 
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
-from flask_pymongo import PyMongo 
+#from flask_pymongo import PyMongo 
 
 app = Flask(__name__)
 #app.config['MONGO_DBNAME'] = 'db'
@@ -125,14 +125,22 @@ def index():
 @app.route('/test',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def test():
+    users = Job_Seeker
     req=request.get_json(force=True)
     uname = req['username']
     password = req['password']
-    
- #   response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
- #   print(dumps(response))
-    return "hhe"#make_response(dumps(response), 200)
-    #return jsonify({"F" :dumps(obj_id)})
+    user_id = users.insert_one(
+            {   "job_title" : uname,
+                
+            })
+    x=str(user_id.inserted_id)
+    #result = {'job title': jobtitle + ' registered'}
+    if user_id:
+        result = {   "job_title" : uname,
+                      "id" : x
+                     # "job_id" : user_id.inserted_id
+                }
+    return jsonify({'result' : result})
  
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
@@ -247,11 +255,12 @@ def jobpost():
                 "jp_email" : req2
             })
     print("Inserted")
+    x=str(user_id.inserted_id)
     #result = {'job title': jobtitle + ' registered'}
     if user_id:
         result = {   "job_title" : jobtitle,
                       "empNo" : cand,
-                      "job_id" : user_id.inserted_id
+                      "job_id" : x
                 }
     return jsonify({'result' : result})
     
