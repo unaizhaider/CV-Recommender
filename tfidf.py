@@ -234,10 +234,12 @@ def log():
 def jobpost():
     users = Job_Provider
     req=request.get_json(force=True)
-    jpemail=req['email']
+    #req2=request.headers['email']
+    email = request.args.get('email')
     jobtitle = req['jobTitle']
     JD = req['JD']
     cand = req['empNo']
+    print(email)
     #user_id = users.insert_one(
     #        {   "job_title" : jobtitle,
     #            "job_description" : JD,
