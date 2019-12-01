@@ -280,9 +280,9 @@ def recommend():
 def allJds():
     #req=request.get_json(force=True)
     req2=request.headers['Authorization']
-    
+    print(req2)
     x = Job_Description.find({"email" : req2})    
-    
+    print(x)
     return dumps(x)
 
 
