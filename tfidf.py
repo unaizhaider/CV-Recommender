@@ -37,10 +37,10 @@ jwt = JWTManager(app)
 
 CORS(app)
 
-Job_Description=db["Job_Desc"]
-Job_Provider=db["Job_Provider"]
-Job_Seeker=db["Job_Seeker"]
-resume=db["CV_att"]
+Job_Description="Job_Desc"
+Job_Provider="Job_Provider"
+Job_Seeker="Job_Seeker"
+resume="CV_att"
 
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
@@ -128,9 +128,9 @@ def test():
     uname = req['username']
     password = req['password']
     
-    response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
-    print(dumps(response))
-    return make_response(dumps(response), 200)
+ #   response = Job_Description.find_one({"$and":[{ "job_title" : uname},{ "cand" : password }]})
+ #   print(dumps(response))
+    return "hhe"#make_response(dumps(response), 200)
     #return jsonify({"F" :dumps(obj_id)})
  
 @app.route('/register', methods=["POST"])
@@ -378,7 +378,7 @@ def submitCV():
     edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
     entities        = parser.extract_entity_sections_professional(text_raw)
     
-    resume_collection=db["CV"]
+    #resume_collection=db["CV"]
     insert ={   "uid" : uid,
                 "cv" : resume,
                 "name" : name,
@@ -387,8 +387,8 @@ def submitCV():
                 "education" : edu,
                 "entities" : entities
             }
-    resume_collection.insert_one(insert)
-    return jsonify(insert)
+    #resume_collection.insert_one(insert)
+    return "d"#djsonify(insert)
 
     
 if __name__ == '__main__':
