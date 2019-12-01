@@ -235,11 +235,11 @@ def jobpost():
     users = Job_Provider
     req=request.get_json(force=True)
     #req2=request.headers['email']
-    email = request.get('email')
+    
     jobtitle = req['jobTitle']
     JD = req['JD']
     cand = req['empNo']
-    print(email)
+    print(request.headers)
     #user_id = users.insert_one(
     #        {   "job_title" : jobtitle,
     #            "job_description" : JD,
