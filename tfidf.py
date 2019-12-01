@@ -282,7 +282,7 @@ def allJds():
     users=Job_Description
     req2=request.headers['Authorization']
     print(req2)
-    x = users.find({"job_id" : req2})    
+    x = users.find({"jp_email" : req2})    
     print(dumps(x))
     return dumps(x)
 
