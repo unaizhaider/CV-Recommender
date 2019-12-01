@@ -235,13 +235,11 @@ def log():
 def jobpost():
     users = Job_Provider
     req=request.get_json(force=True)
-    req2=request.headers['Authorization']
-    #
+    req2=request.headers['email']
     jobtitle = req['jobTitle']
     JD = req['JD']
     cand = req['empNo']
     decoded = dec(req2)
-    jp_email = decoded.identity.email
     print(jp_email)
     #user_id = users.insert_one(
     #        {   "job_title" : jobtitle,
