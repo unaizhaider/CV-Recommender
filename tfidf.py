@@ -164,7 +164,7 @@ def register():
                 "cv" : ""
             })
         print("Job applicant")
-        new_user = users.find_one({'_id': user_id})
+        #new_user = users.find_one({'_id': user_id})
         
     elif usertype == 'Recruiter':
        user_id = user2.insert_one(
@@ -178,9 +178,9 @@ def register():
                 "password" : password
             })
        print("In job seeker")
-       new_user = user2.find_one({'_id': user_id})
+       #new_user = user2.find_one({'_id': user_id})
 
-    result = {'email': new_user['email'] + ' registered'}
+    result = {'email': email + ' registered'}
 
     return jsonify({'result' : result})
 
