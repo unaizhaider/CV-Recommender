@@ -29,7 +29,7 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 #app.config['MONGO_DBNAME'] = 'db'
 #app.config['MONGO_URI'] = 'mongodb://localhost:27017/'
-db = pym.MongoClient()
+connection = pym.MongoClient()
 app.config['JWT_SECRET_KEY'] = 'secret'
 
 #mongo = PyMongo(app)
@@ -37,6 +37,7 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 CORS(app)
+db = connection.test
 
 Job_Description=db["Job_Desc"]
 Job_Provider=db["Job_Provider"]
@@ -186,8 +187,7 @@ def register():
 @app.route('/login2', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def log():
-    users = Job_Seeker
-    user2 = Job_Provider 
+
     req=request.get_json(force=True)
     email = req['username']
     password = req['password']
