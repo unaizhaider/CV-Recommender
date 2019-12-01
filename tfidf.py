@@ -136,8 +136,8 @@ def test():
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
 def register():
-    users = mongo.db.Job_Seeker
-    user2 = mongo.db.Job_Provider
+    users = mongo.Job_Seeker
+    user2 = mongo.Job_Provider
     req=request.get_json(force=True)
     usertype = req['type']
     fname = req['firstname']
@@ -185,8 +185,8 @@ def register():
 @app.route('/login2', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def log():
-    users = mongo.db.Job_Seeker
-    user2 = mongo.db.Job_Provider 
+    users = mongo.Job_Seeker
+    user2 = mongo.Job_Provider 
     req=request.get_json(force=True)
     email = req['username']
     password = req['password']
