@@ -24,7 +24,7 @@ from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
 from flask_pymongo import PyMongo 
-
+import jwt_decode as dec
 
 app = Flask(__name__)
 #app.config['MONGO_DBNAME'] = 'db'
@@ -235,13 +235,14 @@ def log():
 def jobpost():
     users = Job_Provider
     req=request.get_json(force=True)
-    #req2=request.headers['Authorization']
-    #jp_email = req['email']
+    req2=request.headers['Authorization']
+    #
     jobtitle = req['jobTitle']
     JD = req['JD']
     cand = req['empNo']
-    
-    print(request.headers)
+    decoded = dec(req2)
+    jp_email = decoded.identity.email
+    print(jp_email)
     #user_id = users.insert_one(
     #        {   "job_title" : jobtitle,
     #            "job_description" : JD,
