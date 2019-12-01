@@ -23,7 +23,9 @@ from flask_cors import CORS,cross_origin
 from flask_jwt_extended import JWTManager 
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
+
 import json
+from bson import json_util
 #from flask_pymongo import PyMongo 
 
 app = Flask(__name__)
@@ -290,12 +292,11 @@ def allJds():
     req2=request.headers['Authorization']
     print(req2)
     x = users.find({"jp_email" : req2})    
-    docs = []
+    json_docs = []
     for doc in x:
-        doc.pop('_id') 
-        doc['_id'] = doc['_id'].toString()
-        docs.append(doc)
-    return jsonify(docs)
+        json_doc = json.dumps(doc, default=json_util.default)
+        json_docs.append(json_doc)
+    return jsonify(json_docs)
 
 
 
