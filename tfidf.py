@@ -239,7 +239,7 @@ def jobpost():
     #jp_email = req['email']
     jobtitle = req['jobTitle']
     JD = req['JD']
-    cand = req['EmpNo']
+    #cand = req['EmpNo']
     
     print(req2)
     #user_id = users.insert_one(
