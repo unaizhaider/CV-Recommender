@@ -340,7 +340,7 @@ def submitCV():
     uid=request.headers['Authorization']
     users = resume
     print(cv.filename)
-    #print(cv.read())
+    print(cv.read())
     print(uid)
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
