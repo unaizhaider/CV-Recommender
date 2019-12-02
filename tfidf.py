@@ -309,7 +309,9 @@ def allJds():
     users=Job_Description
     req2=request.headers['Authorization']
     print(req2)
-    x = users.find({"jp_email" : req2})    
+    x = users.find({"jp_email" : req2}) 
+    for doc in x:
+        print(doc)
     json_docs = [json.dumps(doc, default=json_util.default) for doc in x]
     print(type(json_docs))
     return jsonify(json_docs)
