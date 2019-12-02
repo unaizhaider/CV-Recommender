@@ -310,14 +310,9 @@ def allJds():
     req2=request.headers['Authorization']
     print(req2)
     x = users.find({"jp_email" : req2})    
-    x = list(x)
-    result = []
-    for i in range(0,len(x)):
-        a = str(x[i])
-        a = a.replace('"', '')
-        result.append(a)
+    json_docs = [json.dumps(doc, default=json_util.default) for doc in x]
     
-    return jsonify(dumps(a))
+    return jsonify(json_docs)
 
 
 
