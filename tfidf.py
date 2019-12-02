@@ -11,7 +11,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
 from pdfminer.pdfpage import PDFPage
-from flask import Flask,request,make_response
+from flask import Flask,request,make_response,session
 from flask import jsonify 
 from spacy.matcher import Matcher
 import spacy
@@ -23,6 +23,8 @@ from flask_cors import CORS,cross_origin
 from flask_jwt_extended import JWTManager 
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
+from werkzeug.utils import secure_filename
+
 
 import json
 from bson import json_util
@@ -338,7 +340,7 @@ def submitCV():
     uid=request.headers['Authorization']
     users = resume
     print(cv.filename)
-    print(cv.read())
+    #print(cv.read())
     print(uid)
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
@@ -368,6 +370,24 @@ def submitCV():
      #   return jsonify({"result" : "success"})
     #else:
     return jsonify({"result" : "unsuccess"})
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/upload', methods=['POST'])
+def fileUpload():
+    target=os.path.join(UPLOAD_FOLDER,'test_docs')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    file = request.files['file'] 
+    filename = secure_filename(file.filename)
+    destination="/".join([target, filename])
+    file.save(destination)
+    session['uploadFilePath']=destination
+    response="Whatever you wish too return"
+    return response
+
 
     
 if __name__ == '__main__':
