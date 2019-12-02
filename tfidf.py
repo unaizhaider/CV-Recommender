@@ -311,12 +311,13 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     x = list(x)
-    result = {  #"job_title" : title,
-                #"empNo" : cand,
-                #"job_id" : ids
-                }
+    result = []
+    for i in range(0,len(x)):
+        a = str(x[i])
+        a = a.replace('"', '')
+        result.append(a)
     
-    return jsonify(dumps(x))
+    return jsonify(dumps(a))
 
 
 
