@@ -311,12 +311,22 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     json_docs = []
+    ids = []
+    title = []
+    cand = []
     for doc in x:
+        ids += [x["_id"]]
+        title += [x["job_title"]]
+        cand += [x["cand"]]
         json_doc = json.dumps(doc, default=json_util.default)
         json_docs.append(json_doc)
-    #encoder = json.JSONEncoder(ensure_ascii=False)
+        
+    result = {  "job_title" : title,
+                "empNo" : cand,
+                "job_id" : ids
+                }
     
-    return jsonify(json_docs)
+    return jsonify(result)
 
 
 
