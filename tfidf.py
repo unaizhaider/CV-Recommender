@@ -315,18 +315,18 @@ def allJds():
     title = []
     cand = []
     for doc in x:
-        ids += [x["_id"]]
-        title += [x["job_title"]]
+        #ids += [x["_id"]]
+        #title += [x["job_title"]]
         cand += [x["cand"]]
         json_doc = json.dumps(doc, default=json_util.default)
         json_docs.append(json_doc)
         
-    result = {  "job_title" : title,
+    result = {  #"job_title" : title,
                 "empNo" : cand,
-                "job_id" : ids
+                #"job_id" : ids
                 }
     
-    return jsonify(result)
+    return jsonify(cand)
 
 
 
