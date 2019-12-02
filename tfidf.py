@@ -320,12 +320,11 @@ def allJds():
 
 
 
-@app.route('/delJd')
+@app.route('/delJd/<str:obj_id>',methods=["DELETE"])
 @cross_origin(supports_credentials=True)
-def delJd():
-    req=request.get_json(force=True)
-    obj = req['obj_id']
-    x = Job_Description.find({"_id": ObjectId(obj)})
+def delJd(obj_id):
+    #req=request.get_json(force=True)
+    x = Job_Description.delete_one({'_id': ObjectId(obj_id)})
     
     if x:
         return "Deleted"
