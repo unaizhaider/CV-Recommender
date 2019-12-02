@@ -313,6 +313,7 @@ def allJds():
     li = []
     for doc in x:
         print(doc)
+        doc['_id'] = str(doc['_id'])
         li.append(doc)
         
     return jsonify(li)
