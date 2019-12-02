@@ -334,11 +334,11 @@ def delJd(obj_id):
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def submitCV():
-    req=request.get_json(force=True)
-    cv = request.files
+    cv = request.files['file']
     uid=request.headers['Authorization']
     users = resume
-    print(cv)
+    print(cv.filename)
+    print(cv.read())
     print(uid)
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
