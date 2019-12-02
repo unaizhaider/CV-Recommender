@@ -312,7 +312,7 @@ def allJds():
     x = users.find({"jp_email" : req2})    
     x = list(x)
     result = {  #"job_title" : title,
-                "empNo" : cand,
+                #"empNo" : cand,
                 #"job_id" : ids
                 }
     
