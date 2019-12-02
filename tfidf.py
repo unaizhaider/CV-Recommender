@@ -335,7 +335,7 @@ def delJd(obj_id):
 @cross_origin(supports_credentials=True)
 def submitCV():
     req=request.get_json(force=True)
-    cv = request.files['file']
+    cv = request.files
     uid=request.headers['Authorization']
     users = resume
     print(cv)
