@@ -342,11 +342,14 @@ def submitCV():
     print(cv.filename)
     print(cv.read())
     print(uid)
-    #nlp = spacy.load('en_core_web_sm')
-    #matcher = Matcher(nlp.vocab)
+    nlp = spacy.load('en_core_web_sm')
+    matcher = Matcher(nlp.vocab)
     
-    #text = extract_text_from_pdf(cv)
+    text = extract_text_from_pdf(cv)
+    
+    
     #text_raw    = parser.extract_text(cv,".pdf")
+    print(text)
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
     #noun_chunks = list(nlp.noun_chunks)
