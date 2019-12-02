@@ -309,24 +309,14 @@ def allJds():
     users=Job_Description
     req2=request.headers['Authorization']
     print(req2)
-    x = users.find({"jp_email" : req2})    
-    json_docs = []
-    ids = []
-    title = []
-    cand = []
-    for doc in x:
-        #ids += [x["_id"]]
-        #title += [x["job_title"]]
-        cand += [x["cand"]]
-        json_doc = json.dumps(doc, default=json_util.default)
-        json_docs.append(json_doc)
-        
+    x = list[users.find({"jp_email" : req2})]    
+    
     result = {  #"job_title" : title,
                 "empNo" : cand,
                 #"job_id" : ids
                 }
     
-    return jsonify(cand)
+    return jsonify(x)
 
 
 
