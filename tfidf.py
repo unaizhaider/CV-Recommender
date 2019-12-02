@@ -342,8 +342,8 @@ def submitCV():
     print(cv.filename)
     print(cv.read())
     print(uid)
-    nlp = spacy.load('en_core_web_sm')
-    matcher = Matcher(nlp.vocab)
+    #nlp = spacy.load('en_core_web_sm')
+    #matcher = Matcher(nlp.vocab)
     
     text = extract_text_from_pdf(cv)
     
