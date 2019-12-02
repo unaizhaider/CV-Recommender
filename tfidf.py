@@ -311,7 +311,7 @@ def allJds():
     print(req2)
     x = users.find({"jp_email" : req2})    
     json_docs = [json.dumps(doc, default=json_util.default) for doc in x]
-    
+    print(type(json_docs))
     return jsonify(json_docs)
 
 
