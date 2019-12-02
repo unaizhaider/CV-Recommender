@@ -336,7 +336,7 @@ def delJd(obj_id):
 def submitCV():
     req=request.get_json(force=True)
     cv = request.files['file']
-    uid = req['email']
+    uid=request.headers['Authorization']
     users = resume
     print(cv)
     print(uid)
