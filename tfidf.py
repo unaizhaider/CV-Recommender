@@ -335,34 +335,39 @@ def delJd(obj_id):
 @cross_origin(supports_credentials=True)
 def submitCV():
     req=request.get_json(force=True)
-    resume = request.files['file']
-    uid = req['uid']
+    cv = request.files['file']
+    uid = req['email']
+    users = resume
+    print(cv)
+    print(uid)
+    #nlp = spacy.load('en_core_web_sm')
+    #matcher = Matcher(nlp.vocab)
     
-    nlp = spacy.load('en_core_web_sm')
-    matcher = Matcher(nlp.vocab)
+    #text = extract_text_from_pdf(cv)
+    #text_raw    = parser.extract_text(cv,".pdf")
+    #text        = ' '.join(text_raw.split())
+    #nlp         = nlp(text)
+    #noun_chunks = list(nlp.noun_chunks)
     
-    text_raw    = parser.extract_text('resume.pdf',".pdf")
-    text        = ' '.join(text_raw.split())
-    nlp         = nlp(text)
-    noun_chunks = list(nlp.noun_chunks)
-    
-    name            = parser.extract_name(nlp, matcher=matcher)
-    email           = parser.extract_email(text)
-    skills          = parser.extract_skills(nlp, noun_chunks, "skills.csv")
-    edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
-    entities        = parser.extract_entity_sections_professional(text_raw)
-    
-    #resume_collection=db["CV"]
-    insert ={   "uid" : uid,
-                "cv" : resume,
-                "name" : name,
-                "email" : email,
-                "skills" : skills,
-                "education" : edu,
-                "entities" : entities
-            }
-    #resume_collection.insert_one(insert)
-    return "d"#djsonify(insert)
+    #name            = parser.extract_name(nlp, matcher=matcher)
+    #email           = parser.extract_email(text)
+    #skills          = parser.extract_skills(nlp, noun_chunks, "skills.csv")
+    #edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
+    #entities        = parser.extract_entity_sections_professional(text_raw)
+
+    #insert ={   "uid" : uid,
+    #            "cv" : resume,
+    #            "name" : name,
+    #            "email" : email,
+    #            "skills" : skills,
+    #            "education" : edu,
+    #            "entities" : entities
+    #        }
+    #user_id = users.insert_one(insert)
+    #if user_id:
+     #   return jsonify({"result" : "success"})
+    #else:
+    return jsonify({"result" : "unsuccess"})
 
     
 if __name__ == '__main__':
