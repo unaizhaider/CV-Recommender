@@ -348,8 +348,8 @@ def submitCV():
     #text = extract_text_from_pdf(cv.read())
     
     
-    #text_raw    = parser.extract_text(cv,".pdf")
-    print(type(cv.read().decode("utf-8")))
+    text_raw    = parser.extract_text(cv,".pdf")
+    print(text_raw)
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
     #noun_chunks = list(nlp.noun_chunks)
