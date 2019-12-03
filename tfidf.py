@@ -335,10 +335,6 @@ def delJd(obj_id):
     else:
         return "Error in deletion"
 
-UPLOAD_FOLDER = 'C:\Users'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def submitCV():
