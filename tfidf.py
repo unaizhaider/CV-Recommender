@@ -49,7 +49,7 @@ db = connection.test
 Job_Description=db["Job_Desc"]
 Job_Provider=db["Job_Provider"]
 Job_Seeker=db["Job_Seeker"]
-resume=db["CV_att"]
+resume=db["CV_Attributes"]
 
 
 def js_list(encoder, data):
