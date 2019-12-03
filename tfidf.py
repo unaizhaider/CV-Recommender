@@ -333,6 +333,10 @@ def delJd(obj_id):
     else:
         return "Error in deletion"
 
+UPLOAD_FOLDER = 'C:\Users'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def submitCV():
@@ -344,9 +348,16 @@ def submitCV():
     #print(uid)
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
-    
-    text = extract_text_from_pdf(cv)
-    
+    target=os.path.join(UPLOAD_FOLDER,'test_docs')
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    file = request.files['file'] 
+    filename = secure_filename(file.filename)
+    destination="/".join([target, filename])
+    file.save(destination)
+    session['uploadFilePath']=destination
+    filepath=destination
+    text = extract_text_from_pdf(filepath)
     
     #text_raw    = parser.extract_text(cv.read(),".pdf")
     print(text)
@@ -374,24 +385,6 @@ def submitCV():
     #else:
     return jsonify({"result" : "unsuccess"})
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route('/upload', methods=['POST'])
-def fileUpload():
-    target=os.path.join(UPLOAD_FOLDER,'test_docs')
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    file = request.files['file'] 
-    filename = secure_filename(file.filename)
-    destination="/".join([target, filename])
-    file.save(destination)
-    session['uploadFilePath']=destination
-    response="Whatever you wish too return"
-    return response
-
-
-    
 if __name__ == '__main__':
     app.run()
