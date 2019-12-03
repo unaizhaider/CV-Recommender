@@ -26,6 +26,8 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from pdfminer.layout import LAParams
 from io import StringIO
+from werkzeug import secure_filename
+
 
 import json
 from bson import json_util
@@ -340,25 +342,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def submitCV():
-    cv = request.files['file']
+    #cv = request.files['file']
     #uid=request.headers['Authorization']
     #users = resume
-    print(cv.filename)
-    #print(cv.read())
-    #print(uid)
-    #nlp = spacy.load('en_core_web_sm')
-    #matcher = Matcher(nlp.vocab)
-    target=os.path.join(UPLOAD_FOLDER,'test_docs')
-    if not os.path.isdir(target):
-        os.mkdir(target)
-    file = request.files['file'] 
-    filename = secure_filename(file.filename)
-    destination="/".join([target, filename])
-    file.save(destination)
-    session['uploadFilePath']=destination
-    filepath=destination
-    text = extract_text_from_pdf(filepath)
-    
+    file = request.files['file']
+    filename = secure_filename(file.filename) 
+
+        # os.path.join is used so that paths work in every operating system
+    file.save(os.path.join("D:",filename))
+
+        # You should use os.path.join here too.
+    text = extract_text_from_pdf(os.path.join("D:",filename))
     #text_raw    = parser.extract_text(cv.read(),".pdf")
     print(text)
     #text        = ' '.join(text_raw.split())
