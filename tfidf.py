@@ -71,31 +71,6 @@ def js_val(encoder, data):
         val = encoder.encode(data)
     return val
 
-
-def pdf_to_text(pdfname):
-
-    # PDFMiner boilerplate
-    rsrcmgr = PDFResourceManager()
-    sio = StringIO()
-    codec = 'utf-8'
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, sio, codec=codec, laparams=laparams)
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-
-    # Extract text
-    fp = pdfname.read()
-    for page in PDFPage.get_pages(fp):
-        interpreter.process_page(page)
-    fp.close()
-
-    # Get text from StringIO
-    text = sio.getvalue()
-
-    # Cleanup
-    device.close()
-    sio.close()
-
-    return text
  
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
@@ -370,7 +345,7 @@ def submitCV():
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
     
-    text = pdf_to_text(cv)
+    text = extract_text_from_pdf(cv)
     
     
     #text_raw    = parser.extract_text(cv.read(),".pdf")
