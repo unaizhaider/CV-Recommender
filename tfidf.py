@@ -370,7 +370,7 @@ def submitCV():
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
     
-    text = pdf_to_text(cv.read())
+    text = pdf_to_text(cv)
     
     
     #text_raw    = parser.extract_text(cv.read(),".pdf")
