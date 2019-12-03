@@ -27,6 +27,7 @@ from werkzeug.utils import secure_filename
 from pdfminer.layout import LAParams
 from io import StringIO
 from werkzeug import secure_filename
+import pandas as pd
 
 
 import json
@@ -95,19 +96,18 @@ def extract_text_from_pdf(pdf_path):
     if text:
         return text
  
-def tfidf():
-    mypath='F:/Taha/resume-parser-master/resume' #path where resumes are saved
-    onlyfiles = [os.path.join(mypath, f) for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
- 
-    i = 0 
-    dat = []
-    while i < len(onlyfiles):
-        file = onlyfiles[i]
-        text = extract_text_from_pdf(file)
-        dat.append(text)
-        i +=1
+def tfidf(jd,empno):
+    
+    cv_users = resume
+    all_users = cv_users.find()
+    
+    cvs = []
+    emails = []
+    for doc in all_users:
+        cvs.append(doc['cv'])
+        emails.append(doc['uid']) 
         
-    raw_documents = dat
+    raw_documents = cvs
     
     cor = []
     for i in range(0, 6):
@@ -119,6 +119,7 @@ def tfidf():
         review = [lm.lemmatize(word) for word in review if not word in set(stopwords.words('english'))]
         review = ' '.join(review)
         cor.append(review)
+        
     gen_docs = [[w.lower() for w in word_tokenize(text)] 
                 for text in cor]
     
@@ -128,12 +129,10 @@ def tfidf():
     
     tf_idf = gensim.models.TfidfModel(corpus)
     
-    sims = gensim.similarities.Similarity('F:/Similarity/sims',tf_idf[corpus],
+    sims = gensim.similarities.Similarity('D:/Similarity/sims',tf_idf[corpus],
                                           num_features=len(dictionary))
     
-    with open("JobDescription.txt") as f:
-        file_content = f.read().rstrip("\n")
-    
+    file_content = jd
     file_content = re.sub('[^a-zA-Z0-9]', ' ', file_content)
     file_content = file_content.lower()
     file_content = file_content.split()
@@ -146,33 +145,41 @@ def tfidf():
     query_doc_tf_idf = tf_idf[query_doc_bow]
     
     x=sims[query_doc_tf_idf]
+    x = list(x)
     
-    return x
+    df = pd.DataFrame(list(zip(emails, x)), 
+               columns =['email', 'score']) 
+    
+    top_cand = df.nlargest(empno, 'score', keep='all')
+    applicant = Job_Seeker
+    applicant_selected_name = []
+    for index, row in top_cand.iterrows():
+        app_id = applicant.find({"email" : row['email']})
+        fn = app_id['firstname']
+        ln = app_id['lastname']
+        applicant_selected_name.append(fn+ " " + ln)
+    
+    top_cand['name'] = applicant_selected_name
+    
+    return top_cand.to_json(orient='records')
 
 @app.route('/')
 def index():
     return "Hello"
 
-@app.route('/test',methods=['POST'])
+@app.route('/recommend',methods=['POST','GET'])
 @cross_origin(supports_credentials=True)
-def test():
-    users = Job_Seeker
+def recommend():
     req=request.get_json(force=True)
-    uname = req['username']
-    password = req['password']
-    user_id = users.insert_one(
-            {   "job_title" : uname,
-                
-            })
-    x=str(user_id.inserted_id)
-    #result = {'job title': jobtitle + ' registered'}
-    if user_id:
-        result = {   "job_title" : uname,
-                      "id" : x
-                     # "job_id" : user_id.inserted_id
-                }
-    return jsonify({'result' : result})
+    email=req['jobid']
+    x = Job_Description.find({'_id': ObjectId(email)})
+    jd = x['job_description']
+    emp_no = x['empNo']
+    
+    recommended = tfidf(jd,emp_no)
  
+    return recommended
+
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
 def register():
@@ -294,16 +301,6 @@ def jobpost():
                       "job_id" : x
                 }
     return jsonify({'result' : result})
-    
-
-@app.route('/recommend',methods=['POST'])
-@cross_origin(supports_credentials=True)
-def recommend():
-    req=request.get_json(force=True)
-    req2=request.headers['Authorization']
-    x = list(Job_Description.find({},{"jpid" : req2}))
-    
-    #recommended = tfidf(x[0])
     
 
 @app.route('/allJds',methods=['POST','GET'])
