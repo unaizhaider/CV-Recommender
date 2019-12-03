@@ -71,26 +71,26 @@ def js_val(encoder, data):
     return val
 
  
-def extract_text_from_pdf(pdf_path):
-    resource_manager = PDFResourceManager()
-    fake_file_handle = io.StringIO()
-    converter = TextConverter(resource_manager, fake_file_handle)
-    page_interpreter = PDFPageInterpreter(resource_manager, converter)
- 
-    with open(pdf_path, 'rb') as fh:
-        for page in PDFPage.get_pages(fh, 
-                                      caching=True,
-                                      check_extractable=True):
-            page_interpreter.process_page(page)
- 
-        text = fake_file_handle.getvalue()
- 
-    # close open handles
-    converter.close()
-    fake_file_handle.close()
- 
-    if text:
-        return text
+#def extract_text_from_pdf(pdf_path):
+#    resource_manager = PDFResourceManager()
+#    fake_file_handle = io.StringIO()
+#    converter = TextConverter(resource_manager, fake_file_handle)
+#    page_interpreter = PDFPageInterpreter(resource_manager, converter)
+# 
+#    with open(pdf_path, 'rb') as fh:
+#        for page in PDFPage.get_pages(fh, 
+#                                      caching=True,
+#                                      check_extractable=True):
+#            page_interpreter.process_page(page)
+# 
+#        text = fake_file_handle.getvalue()
+# 
+#    # close open handles
+#    converter.close()
+#    fake_file_handle.close()
+# 
+#    if text:
+#        return text
  
 def tfidf():
     mypath='F:/Taha/resume-parser-master/resume' #path where resumes are saved
@@ -331,6 +331,23 @@ def delJd(obj_id):
         return "Deleted"
     else:
         return "Error in deletion"
+
+from io import StringIO
+from pdfminer.high_level import extract_text_to_fp
+from typing import BinaryIO
+
+
+def extract_text_from_pdf(pdf_fo: BinaryIO) -> str:
+    """
+    Extracts text from a PDF
+
+    :param pdf_fo: a byte file object representing a PDF file
+    :return: extracted text
+    :raises pdfminer.pdftypes.PDFException: on invalid PDF
+    """
+    out_fo = StringIO()
+    extract_text_to_fp(pdf_fo, out_fo)
+    return out_fo.getvalue()
 
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
