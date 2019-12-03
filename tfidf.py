@@ -339,17 +339,12 @@ def delJd(obj_id):
 @cross_origin(supports_credentials=True)
 def submitCV():
     #cv = request.files['file']
-    #uid=request.headers['Authorization']
-    #users = resume
+    uid=request.headers['Authorization']
+    users = resume
     file = request.files['file']
     filename = secure_filename(file.filename) 
-
-        # os.path.join is used so that paths work in every operating system
     file.save(os.path.join("D:",filename))
-
-        # You should use os.path.join here too.
     text = extract_text_from_pdf(os.path.join("D:",filename))
-    #text_raw    = parser.extract_text(cv.read(),".pdf")
     print(text)
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
@@ -361,19 +356,21 @@ def submitCV():
     #edu             = parser.extract_education([sent.string.strip() for sent in nlp.sents])
     #entities        = parser.extract_entity_sections_professional(text_raw)
 
-    #insert ={   "uid" : uid,
-    #            "cv" : resume,
+    insert ={   "uid" : uid,
+                "cv" : resume,
     #            "name" : name,
     #            "email" : email,
     #            "skills" : skills,
     #            "education" : edu,
     #            "entities" : entities
-    #        }
-    #user_id = users.insert_one(insert)
-    #if user_id:
-     #   return jsonify({"result" : "success"})
-    #else:
-    return jsonify({"result" : "unsuccess"})
+            }
+    user_id = users.insert_one(insert)
+    if user_id:
+        print("Success")
+        return jsonify({"result" : "success"})
+    else:
+        print("Unsuccess")
+        return jsonify({"result" : "unsuccess"})
 
 
 if __name__ == '__main__':
