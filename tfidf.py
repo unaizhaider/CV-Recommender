@@ -83,7 +83,7 @@ def pdf_to_text(pdfname):
     interpreter = PDFPageInterpreter(rsrcmgr, device)
 
     # Extract text
-    fp = open(pdfname, 'rb').read()
+    fp = pdfname.read()
     for page in PDFPage.get_pages(fp):
         interpreter.process_page(page)
     fp.close()
