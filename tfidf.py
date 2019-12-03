@@ -337,19 +337,19 @@ def delJd(obj_id):
 @cross_origin(supports_credentials=True)
 def submitCV():
     cv = request.files['file']
-    uid=request.headers['Authorization']
-    users = resume
+    #uid=request.headers['Authorization']
+    #users = resume
     print(cv.filename)
-    print(cv.read())
-    print(uid)
+    #print(cv.read())
+    #print(uid)
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
     
-    text = extract_text_from_pdf(cv)
+    #text = extract_text_from_pdf(cv.read())
     
     
     #text_raw    = parser.extract_text(cv,".pdf")
-    print(text)
+    print(type(cv.read()))
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
     #noun_chunks = list(nlp.noun_chunks)
