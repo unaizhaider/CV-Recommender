@@ -24,7 +24,8 @@ from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
 from werkzeug.utils import secure_filename
-
+from pdfminer.layout import LAParams
+from cStringIO import StringIO
 
 import json
 from bson import json_util
@@ -71,7 +72,31 @@ def js_val(encoder, data):
     return val
 
 
-    
+def pdf_to_text(pdfname):
+
+    # PDFMiner boilerplate
+    rsrcmgr = PDFResourceManager()
+    sio = StringIO()
+    codec = 'utf-8'
+    laparams = LAParams()
+    device = TextConverter(rsrcmgr, sio, codec=codec, laparams=laparams)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+    # Extract text
+    fp = open(pdfname, 'rb').read()
+    for page in PDFPage.get_pages(fp):
+        interpreter.process_page(page)
+    fp.close()
+
+    # Get text from StringIO
+    text = sio.getvalue()
+
+    # Cleanup
+    device.close()
+    sio.close()
+
+    return text
+ 
 def extract_text_from_pdf(pdf_path):
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
@@ -345,11 +370,11 @@ def submitCV():
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
     
-    #text = extract_text_from_pdf(cv.read())
+    text = extract_text_from_pdf(cv.read())
     
     
-    text_raw    = parser.extract_text(cv.read(),".pdf")
-    print(text_raw)
+    #text_raw    = parser.extract_text(cv.read(),".pdf")
+    print(text)
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
     #noun_chunks = list(nlp.noun_chunks)
