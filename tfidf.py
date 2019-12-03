@@ -25,6 +25,7 @@ from flask_jwt_extended import create_access_token
 from flask_bcrypt import Bcrypt 
 from werkzeug.utils import secure_filename
 from pdfminer.layout import LAParams
+from io import StringIO
 
 import json
 from bson import json_util
@@ -70,27 +71,52 @@ def js_val(encoder, data):
         val = encoder.encode(data)
     return val
 
+
+def pdf_to_text(pdfname):
+
+    # PDFMiner boilerplate
+    rsrcmgr = PDFResourceManager()
+    sio = StringIO()
+    codec = 'utf-8'
+    laparams = LAParams()
+    device = TextConverter(rsrcmgr, sio, codec=codec, laparams=laparams)
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+
+    # Extract text
+    fp = open(pdfname, 'rb').read()
+    for page in PDFPage.get_pages(fp):
+        interpreter.process_page(page)
+    fp.close()
+
+    # Get text from StringIO
+    text = sio.getvalue()
+
+    # Cleanup
+    device.close()
+    sio.close()
+
+    return text
  
-#def extract_text_from_pdf(pdf_path):
-#    resource_manager = PDFResourceManager()
-#    fake_file_handle = io.StringIO()
-#    converter = TextConverter(resource_manager, fake_file_handle)
-#    page_interpreter = PDFPageInterpreter(resource_manager, converter)
-# 
-#    with open(pdf_path, 'rb') as fh:
-#        for page in PDFPage.get_pages(fh, 
-#                                      caching=True,
-#                                      check_extractable=True):
-#            page_interpreter.process_page(page)
-# 
-#        text = fake_file_handle.getvalue()
-# 
-#    # close open handles
-#    converter.close()
-#    fake_file_handle.close()
-# 
-#    if text:
-#        return text
+def extract_text_from_pdf(pdf_path):
+    resource_manager = PDFResourceManager()
+    fake_file_handle = io.StringIO()
+    converter = TextConverter(resource_manager, fake_file_handle)
+    page_interpreter = PDFPageInterpreter(resource_manager, converter)
+ 
+    with open(pdf_path, 'rb') as fh:
+        for page in PDFPage.get_pages(fh, 
+                                      caching=True,
+                                      check_extractable=True):
+            page_interpreter.process_page(page)
+ 
+        text = fake_file_handle.getvalue()
+ 
+    # close open handles
+    converter.close()
+    fake_file_handle.close()
+ 
+    if text:
+        return text
  
 def tfidf():
     mypath='F:/Taha/resume-parser-master/resume' #path where resumes are saved
@@ -332,23 +358,6 @@ def delJd(obj_id):
     else:
         return "Error in deletion"
 
-from io import StringIO
-from pdfminer.high_level import extract_text_to_fp
-from typing import BinaryIO
-
-
-def extract_text_from_pdf(pdf_fo: BinaryIO) -> str:
-    """
-    Extracts text from a PDF
-
-    :param pdf_fo: a byte file object representing a PDF file
-    :return: extracted text
-    :raises pdfminer.pdftypes.PDFException: on invalid PDF
-    """
-    out_fo = StringIO()
-    extract_text_to_fp(pdf_fo, out_fo)
-    return out_fo.getvalue()
-
 @app.route('/submitCV',methods=['POST'])
 @cross_origin(supports_credentials=True)
 def submitCV():
@@ -361,7 +370,7 @@ def submitCV():
     #nlp = spacy.load('en_core_web_sm')
     #matcher = Matcher(nlp.vocab)
     
-    text = extract_text_from_pdf(cv.read())
+    text = pdf_to_text(cv.read())
     
     
     #text_raw    = parser.extract_text(cv.read(),".pdf")
