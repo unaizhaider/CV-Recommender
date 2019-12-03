@@ -357,7 +357,7 @@ def submitCV():
     #entities        = parser.extract_entity_sections_professional(text_raw)
 
     insert ={   "uid" : uid,
-                "cv" : resume,
+                "cv" : text,
     #            "name" : name,
     #            "email" : email,
     #            "skills" : skills,
