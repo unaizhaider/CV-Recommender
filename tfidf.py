@@ -348,7 +348,7 @@ def submitCV():
     #text = extract_text_from_pdf(cv.read())
     
     
-    text_raw    = parser.extract_text(cv,".pdf")
+    text_raw    = parser.extract_text(cv.read(),".pdf")
     print(text_raw)
     #text        = ' '.join(text_raw.split())
     #nlp         = nlp(text)
