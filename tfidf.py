@@ -128,7 +128,7 @@ def tfidf(jd,empno):
         print (document)
     all_users = cv_users.find({})
     
-    cvs = all_users['cv']
+    cvs = []
     emails = []
     for doc in all_users:
         cvs.append(doc['cv'])
