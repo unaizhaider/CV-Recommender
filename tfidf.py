@@ -29,7 +29,8 @@ from io import StringIO
 from werkzeug import secure_filename
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity  
 
 
 import json
@@ -98,6 +99,27 @@ def extract_text_from_pdf(pdf_path):
     if text:
         return text
  
+def create_tokenizer_score(new_series, train_series, tokenizer):
+    """
+    return the tf idf score of each possible pairs of documents
+    Args:
+        new_series (pd.Series): new data (To compare against train data)
+        train_series (pd.Series): train data (To fit the tf-idf transformer)
+    Returns:
+        pd.DataFrame
+    """
+
+    train_tfidf = tokenizer.fit_transform(train_series)
+    new_tfidf = tokenizer.transform(new_series)
+    X = pd.DataFrame(cosine_similarity(new_tfidf, train_tfidf), columns=train_series.index)
+    X['ix_new'] = new_series.index
+    score = pd.melt(
+        X,
+        id_vars='ix_new',
+        var_name='ix_train',
+        value_name='score'
+    )
+    return score
 
 def tfidf(jd,empno):
     
@@ -117,19 +139,12 @@ def tfidf(jd,empno):
         review = re.sub('\uf0b7', '', raw_documents[i])
         review = review.lower()
         cor.append(review)
-    vectorizer = CountVectorizer(stop_words = stopwords)
-    #print vectorizer
-    transformer = TfidfTransformer()
-    #print transformer
-    
-    trainVectorizerArray = vectorizer.fit_transform(cor).toarray()
-    testVectorizerArray = vectorizer.transform(jd).toarray()
-    
-    transformer.fit(trainVectorizerArray)
-    transformer.fit(testVectorizerArray)
+    train_set = pd.Series(cor)
+    test_set = pd.Series(jd)
+    tokenizer = TfidfVectorizer() # initiate here your own tokenizer (TfidfVectorizer, CountVectorizer, with stopwords...)
+    score = create_tokenizer_score(train_series=train_set, new_series=test_set, tokenizer=tokenizer)
+    print(score)
 
-    tfidf = transformer.transform(testVectorizerArray)
-    print (tfidf.todense())
 #    gen_docs = [[w.lower() for w in word_tokenize(text)] 
 #                for text in cor]
 #    print(gen_docs)
