@@ -177,7 +177,7 @@ def recommend():
     x = Job_Description.find_one({'_id': ObjectId(jid)})
     
     jd = str(x['job_description'])
-    emp_no = str(x['empNo'])
+    emp_no = str(x['cand'])
 #    
 #    #recommended = tfidf(jd,emp_no)
     print(jd)
