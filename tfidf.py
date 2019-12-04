@@ -144,7 +144,7 @@ def tfidf(jd,empno):
     tokenizer = TfidfVectorizer() # initiate here your own tokenizer (TfidfVectorizer, CountVectorizer, with stopwords...)
     score = create_tokenizer_score(train_series=train_set, new_series=test_set, tokenizer=tokenizer)
     print(score)
-
+    print(len(cor))
 #    gen_docs = [[w.lower() for w in word_tokenize(text)] 
 #                for text in cor]
 #    print(gen_docs)
