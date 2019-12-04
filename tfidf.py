@@ -174,7 +174,7 @@ def recommend():
     d = json.loads(email)
     jid = d['taskid']
     print(jid)
-    x = Job_Description.find({'_id': ObjectId(email)})
+    x = Job_Description.find({'_id': ObjectId(jid)})
     jd = x['job_description']
     emp_no = x['empNo']
 #    
