@@ -155,7 +155,7 @@ def tfidf(jd,empno):
     applicant = Job_Seeker
     applicant_selected_name = []
     for index, row in top_cand.iterrows():
-        app_id = applicant.find({"email" : row['email']})
+        app_id = applicant.find_one({"email" : row['email']})
         fn = app_id['firstname']
         ln = app_id['lastname']
         applicant_selected_name.append(fn+ " " + ln)
