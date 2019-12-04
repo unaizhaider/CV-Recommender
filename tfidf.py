@@ -124,27 +124,29 @@ def create_tokenizer_score(new_series, train_series, tokenizer):
 def tfidf(jd,empno):
     
     cv_users = resume
-    all_users = cv_users.find({})
-    
-    cvs = all_users['cv']
-    emails = []
-    for doc in all_users:
-        #cvs.append(doc['cv'])
-        emails.append(doc['uid']) 
-        
-    raw_documents = cvs
-    #print(cvs)
-    cor = []
-    for i in range(0, len(cvs)):
-        review = re.sub('\uf0b7', '', raw_documents[i])
-        review = review.lower()
-        cor.append(review)
-    train_set = pd.Series(cor)
-    test_set = pd.Series(jd)
-    tokenizer = TfidfVectorizer() # initiate here your own tokenizer (TfidfVectorizer, CountVectorizer, with stopwords...)
-    score = create_tokenizer_score(train_series=train_set, new_series=test_set, tokenizer=tokenizer)
-    print(score)
-    print(len(cor))
+    for document in cv_users.find():
+        print (document)
+#    all_users = cv_users.find({})
+#    
+#    cvs = all_users['cv']
+#    emails = []
+#    for doc in all_users:
+#        #cvs.append(doc['cv'])
+#        emails.append(doc['uid']) 
+#        
+#    raw_documents = cvs
+#    #print(cvs)
+#    cor = []
+#    for i in range(0, len(cvs)):
+#        review = re.sub('\uf0b7', '', raw_documents[i])
+#        review = review.lower()
+#        cor.append(review)
+#    train_set = pd.Series(cor)
+#    test_set = pd.Series(jd)
+#    tokenizer = TfidfVectorizer() # initiate here your own tokenizer (TfidfVectorizer, CountVectorizer, with stopwords...)
+#    score = create_tokenizer_score(train_series=train_set, new_series=test_set, tokenizer=tokenizer)
+#    print(score)
+#    print(len(cor))
 #    gen_docs = [[w.lower() for w in word_tokenize(text)] 
 #                for text in cor]
 #    print(gen_docs)
