@@ -109,19 +109,9 @@ def tfidf(jd,empno):
         
     raw_documents = cvs
     print(cvs)
-    cor = []
-    for i in range(0, len(cvs)):
-        review = re.sub('[^a-zA-Z0-9]', ' ', raw_documents[i])
-        review = review.lower()
-        review = review.split()
-        #ps = PorterStemmer()
-        #lm = WordNetLemmatizer()
-        #review = [lm.lemmatize(word) for word in review if not word in set(stopwords.words('english'))]
-        review = ' '.join(review)
-        cor.append(review)
         
     gen_docs = [[w.lower() for w in word_tokenize(text)] 
-                for text in cor]
+                for text in raw_documents]
     
     dictionary = gensim.corpora.Dictionary(gen_docs)
     
