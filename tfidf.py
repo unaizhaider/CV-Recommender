@@ -170,18 +170,15 @@ def index():
 @app.route('/recommend',methods=['POST','GET'])
 @cross_origin(supports_credentials=True)
 def recommend():
-    req=request.get_json(force=True)
-    email=req['jobid']
-    x = Job_Description.find({'_id': ObjectId(email)})
-    jd = ""
-    emp_no = ""
-    
-    for doc in x:
-        jd = doc['job_description']
-        emp_no = doc['cand']
-    #recommended = tfidf(jd,emp_no)
-    print(jd)
-    print(emp_no)
+    email=request.headers#['Authorization']
+    print(email)
+#    x = Job_Description.find({'_id': ObjectId(email)})
+#    jd = x['job_description']
+#    emp_no = x['empNo']
+#    
+#    #recommended = tfidf(jd,emp_no)
+#    print(jd)
+#    print(emp_no)
     return "ok"
 
 @app.route('/register', methods=["POST"])
