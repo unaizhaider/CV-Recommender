@@ -146,7 +146,7 @@ def tfidf(jd,empno):
     
     x=sims[query_doc_tf_idf]
     x = list(x)
-    
+    print(x)
 #    df = pd.DataFrame(list(zip(emails, x)), 
 #               columns =['email', 'score']) 
 #    
@@ -182,7 +182,7 @@ def recommend():
     recommended = tfidf(jd,emp_no)
     print(jd)
     print(emp_no)
-    return jsonify(recommended)
+    return "ok"
 
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
