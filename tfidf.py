@@ -164,7 +164,7 @@ def tfidf(jd,empno):
     top_cand.drop(['ix_new','ix_train'],axis=1,inplace=True)
     print(top_cand)
     
-    return "oo"#top_cand.to_json(orient='records')
+    return top_cand.to_json(orient='records')
 
 @app.route('/')
 def index():
