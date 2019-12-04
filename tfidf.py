@@ -130,8 +130,6 @@ def tfidf(jd,empno):
     print(sims)
     print(type(sims))
     file_content = jd
-    file_content = re.sub('[^a-zA-Z0-9]', ' ', file_content)
-    file_content = file_content.lower()
     query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
     query_doc_bow = dictionary.doc2bow(query_doc)
     query_doc_tf_idf = tf_idf[query_doc_bow]
