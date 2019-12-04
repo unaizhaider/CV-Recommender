@@ -110,7 +110,7 @@ def tfidf(jd,empno):
     raw_documents = cvs
     
     cor = []
-    for i in range(0, 6):
+    for i in range(0, len(cvs)):
         review = re.sub('[^a-zA-Z0-9]', ' ', raw_documents[i])
         review = review.lower()
         review = review.split()
