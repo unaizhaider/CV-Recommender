@@ -175,8 +175,12 @@ def recommend():
     jid = d['taskid']
     print(jid)
     x = Job_Description.find({'_id': ObjectId(jid)})
-    jd = x['job_description']
-    emp_no = x['empNo']
+    
+    jd = ""
+    emp_no = ""
+    for doc in x:
+        jd = x['job_description']
+        emp_no = x['empNo']
 #    
 #    #recommended = tfidf(jd,emp_no)
     print(jd)
