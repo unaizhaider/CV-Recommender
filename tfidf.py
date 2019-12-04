@@ -152,19 +152,25 @@ def tfidf(jd,empno):
 #               columns =['email', 'score']) 
     df['email'] = emails
     top_cand = df.nlargest(empno, 'score', keep='all')
-    applicant = Job_Seeker
-    applicant_selected_name = []
-    for index, row in top_cand.iterrows():
-        app_id = applicant.find_one({"email" : row['email']})
-        fn = app_id['firstname']
-        ln = app_id['lastname']
-        applicant_selected_name.append(fn+ " " + ln)
-#    
-    top_cand['name'] = applicant_selected_name
-    top_cand.drop(['ix_new','ix_train'],axis=1,inplace=True)
-    print(top_cand)
-    
-    return top_cand.to_json(orient='records')
+    if top_cand > 0:
+        applicant = Job_Seeker
+        applicant_selected_name = []
+        for index, row in top_cand.iterrows():
+            app_id = applicant.find_one({"email" : row['email']})
+            fn = app_id['firstname']
+            ln = app_id['lastname']
+            applicant_selected_name.append(fn+ " " + ln)
+                
+        top_cand['name'] = applicant_selected_name
+        top_cand.drop(['ix_new','ix_train'],axis=1,inplace=True)
+        print(top_cand)
+        
+        return top_cand.to_json(orient='records')
+    else:
+        df_empty = pd.DataFrame({'score' : []})
+        df_empty['name'] = []
+        df_empty['email'] = []
+        return df_empty.to_json(orient='records')
 
 @app.route('/')
 def index():
