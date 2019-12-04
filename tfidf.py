@@ -174,13 +174,13 @@ def recommend():
     d = json.loads(email)
     jid = d['taskid']
     print(jid)
-    #x = Job_Description.find({'_id': ObjectId(email)})
-    #jd = x['job_description']
-    #emp_no = x['empNo']
+    x = Job_Description.find({'_id': ObjectId(email)})
+    jd = x['job_description']
+    emp_no = x['empNo']
 #    
 #    #recommended = tfidf(jd,emp_no)
-    #print(jd)
-    #print(emp_no)
+    print(jd)
+    print(emp_no)
     return "ok"
 
 @app.route('/register', methods=["POST"])
