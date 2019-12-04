@@ -137,7 +137,6 @@ def tfidf(jd,empno):
     query_doc_tf_idf = tf_idf[query_doc_bow]
     print(query_doc)
     x=sims[query_doc_tf_idf]
-    x = list(x)
     print(x)
 #    df = pd.DataFrame(list(zip(emails, x)), 
 #               columns =['email', 'score']) 
