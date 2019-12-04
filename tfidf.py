@@ -126,10 +126,10 @@ def tfidf(jd,empno):
     cv_users = resume
     all_users = cv_users.find({})
     
-    cvs = []
+    cvs = all_users['cv']
     emails = []
     for doc in all_users:
-        cvs.append(doc['cv'])
+        #cvs.append(doc['cv'])
         emails.append(doc['uid']) 
         
     raw_documents = cvs
