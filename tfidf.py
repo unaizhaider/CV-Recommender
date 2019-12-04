@@ -161,7 +161,10 @@ def tfidf(jd,empno):
         applicant_selected_name.append(fn+ " " + ln)
 #    
     top_cand['name'] = applicant_selected_name
-    print(top_cand)
+    top_cand.drop(['ix_new','ix_train'],axis=1,inplace=True)
+    final_df = df.sort_values(by=['score'], ascending=False)
+    
+    print(final_df)
     
     return "oo"#top_cand.to_json(orient='records')
 
