@@ -136,6 +136,7 @@ def tfidf(jd,empno):
     query_doc_bow = dictionary.doc2bow(query_doc)
     query_doc_tf_idf = tf_idf[query_doc_bow]
     print(query_doc)
+    print(query_doc_bow)
     print(query_doc_tf_idf)
     x=sims[query_doc_tf_idf]
     print(x)
