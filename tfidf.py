@@ -148,9 +148,9 @@ def tfidf(jd,empno):
     print(score)
     print(len(cor))
 
-    df = score.to_frame#pd.DataFrame(list(zip(emails, x)), 
+    df = score#pd.DataFrame(list(zip(emails, x)), 
 #               columns =['email', 'score']) 
-#    
+    df['email'] = emails
     top_cand = df.nlargest(empno, 'score', keep='all')
     applicant = Job_Seeker
     applicant_selected_name = []
