@@ -28,6 +28,8 @@ from pdfminer.layout import LAParams
 from io import StringIO
 from werkzeug import secure_filename
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 
 
 import json
@@ -96,6 +98,7 @@ def extract_text_from_pdf(pdf_path):
     if text:
         return text
  
+
 def tfidf(jd,empno):
     
     cv_users = resume
@@ -112,30 +115,43 @@ def tfidf(jd,empno):
     cor = []
     for i in range(0, len(cvs)):
         review = re.sub('\uf0b7', '', raw_documents[i])
+        review = review.lower()
         cor.append(review)
-        
-    gen_docs = [[w.lower() for w in word_tokenize(text)] 
-                for text in cor]
-    print(gen_docs)
-    dictionary = gensim.corpora.Dictionary(gen_docs)
+    vectorizer = CountVectorizer(stop_words = stopwords)
+    #print vectorizer
+    transformer = TfidfTransformer()
+    #print transformer
     
-    corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
+    trainVectorizerArray = vectorizer.fit_transform(cor).toarray()
+    testVectorizerArray = vectorizer.transform(jd).toarray()
     
-    tf_idf = gensim.models.TfidfModel(corpus)
-    print(tf_idf)
-    sims = gensim.similarities.Similarity('D:/Similarity/sims',tf_idf[corpus],
-                                          num_features=len(dictionary))
-    print(sims)
-    print(type(sims))
-    file_content = jd
-    query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
-    query_doc_bow = dictionary.doc2bow(query_doc)
-    query_doc_tf_idf = tf_idf[query_doc_bow]
-    print(query_doc)
-    print(query_doc_bow)
-    print(query_doc_tf_idf)
-    x=sims[query_doc_tf_idf]
-    print(x)
+    transformer.fit(trainVectorizerArray)
+    transformer.fit(testVectorizerArray)
+
+    tfidf = transformer.transform(testVectorizerArray)
+    print (tfidf.todense())
+#    gen_docs = [[w.lower() for w in word_tokenize(text)] 
+#                for text in cor]
+#    print(gen_docs)
+#    dictionary = gensim.corpora.Dictionary(gen_docs)
+#    
+#    corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
+#    
+#    tf_idf = gensim.models.TfidfModel(corpus)
+#    print(tf_idf)
+#    sims = gensim.similarities.Similarity('D:/Similarity/sims',tf_idf[corpus],
+#                                          num_features=len(dictionary))
+#    print(sims)
+#    print(type(sims))
+#    file_content = jd
+#    query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
+#    query_doc_bow = dictionary.doc2bow(query_doc)
+#    query_doc_tf_idf = tf_idf[query_doc_bow]
+#    print(query_doc)
+#    print(query_doc_bow)
+#    print(query_doc_tf_idf)
+#    x=sims[query_doc_tf_idf]
+#    print(x)
 #    df = pd.DataFrame(list(zip(emails, x)), 
 #               columns =['email', 'score']) 
 #    
@@ -150,7 +166,7 @@ def tfidf(jd,empno):
 #    
 #    top_cand['name'] = applicant_selected_name
     
-    return x#top_cand.to_json(orient='records')
+    return "oo"#top_cand.to_json(orient='records')
 
 @app.route('/')
 def index():
