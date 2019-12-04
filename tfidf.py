@@ -171,7 +171,8 @@ def index():
 @cross_origin(supports_credentials=True)
 def recommend():
     email=request.headers['Authorization']
-    print(str(email))
+    email = email['taskid']
+    print(email)
     x = Job_Description.find({'_id': ObjectId(email)})
     jd = x['job_description']
     emp_no = x['empNo']
