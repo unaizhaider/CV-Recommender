@@ -147,21 +147,21 @@ def tfidf(jd,empno):
     x=sims[query_doc_tf_idf]
     x = list(x)
     
-    df = pd.DataFrame(list(zip(emails, x)), 
-               columns =['email', 'score']) 
+#    df = pd.DataFrame(list(zip(emails, x)), 
+#               columns =['email', 'score']) 
+#    
+#    top_cand = df.nlargest(empno, 'score', keep='all')
+#    applicant = Job_Seeker
+#    applicant_selected_name = []
+#    for index, row in top_cand.iterrows():
+#        app_id = applicant.find({"email" : row['email']})
+#        fn = app_id['firstname']
+#        ln = app_id['lastname']
+#        applicant_selected_name.append(fn+ " " + ln)
+#    
+#    top_cand['name'] = applicant_selected_name
     
-    top_cand = df.nlargest(empno, 'score', keep='all')
-    applicant = Job_Seeker
-    applicant_selected_name = []
-    for index, row in top_cand.iterrows():
-        app_id = applicant.find({"email" : row['email']})
-        fn = app_id['firstname']
-        ln = app_id['lastname']
-        applicant_selected_name.append(fn+ " " + ln)
-    
-    top_cand['name'] = applicant_selected_name
-    
-    return top_cand.to_json(orient='records')
+    return x#top_cand.to_json(orient='records')
 
 @app.route('/')
 def index():
