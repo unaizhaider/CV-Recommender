@@ -108,27 +108,27 @@ def tfidf(jd,empno):
         emails.append(doc['uid']) 
         
     raw_documents = cvs
-    print(cvs)
+    #print(cvs)
     cor = []
     for i in range(0, len(cvs)):
         review = re.sub('[^a-zA-Z0-9]', ' ', raw_documents[i])
         review = review.lower()
-        
         review = ' '.join(review)
         cor.append(review)
         
     gen_docs = [[w.lower() for w in word_tokenize(text)] 
                 for text in cor]
-    
+    print(gen_docs)
     dictionary = gensim.corpora.Dictionary(gen_docs)
     
     corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
     
     tf_idf = gensim.models.TfidfModel(corpus)
-    
+    print(tf_idf)
     sims = gensim.similarities.Similarity('D:/Similarity/sims',tf_idf[corpus],
                                           num_features=len(dictionary))
-    
+    print(sims)
+    print(type(sims))
     file_content = jd
     file_content = re.sub('[^a-zA-Z0-9]', ' ', file_content)
     file_content = file_content.lower()
@@ -140,7 +140,7 @@ def tfidf(jd,empno):
     query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
     query_doc_bow = dictionary.doc2bow(query_doc)
     query_doc_tf_idf = tf_idf[query_doc_bow]
-    
+    print(query_doc)
     x=sims[query_doc_tf_idf]
     x = list(x)
     print(x)
@@ -177,8 +177,8 @@ def recommend():
     emp_no = str(x['cand'])
     
     recommended = tfidf(jd,emp_no)
-    print(jd)
-    print(emp_no)
+    #print(jd)
+    #print(emp_no)
     return "ok"
 
 @app.route('/register', methods=["POST"])
