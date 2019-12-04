@@ -152,7 +152,7 @@ def tfidf(jd,empno):
 #               columns =['email', 'score']) 
     df['email'] = emails
     top_cand = df.nlargest(empno, 'score', keep='all')
-    if top_cand.max() > 0:
+    if top_cand['score'].max() > 0:
         applicant = Job_Seeker
         applicant_selected_name = []
         for index, row in top_cand.iterrows():
