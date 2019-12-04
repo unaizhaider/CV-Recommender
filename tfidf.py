@@ -174,13 +174,10 @@ def recommend():
     d = json.loads(email)
     jid = d['taskid']
     print(jid)
-    x = Job_Description.find({'_id': ObjectId(jid)})
+    x = Job_Description.find_one({'_id': ObjectId(jid)})
     
-    jd = ""
-    emp_no = ""
-    for doc in x:
-        jd = x['job_description']
-        emp_no = x['empNo']
+    jd = str(x['job_description'])
+    emp_no = str(x['empNo'])
 #    
 #    #recommended = tfidf(jd,emp_no)
     print(jd)
