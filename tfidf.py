@@ -132,7 +132,7 @@ def tfidf(jd,empno):
     emails = []
     for doc in all_users:
         cvs.append(doc['cv'])
-#        emails.append(doc['uid']) 
+        emails.append(doc['uid']) 
 #        
     raw_documents = cvs
     print(cvs)
@@ -147,41 +147,21 @@ def tfidf(jd,empno):
     score = create_tokenizer_score(train_series=train_set, new_series=test_set, tokenizer=tokenizer)
     print(score)
     print(len(cor))
-#    gen_docs = [[w.lower() for w in word_tokenize(text)] 
-#                for text in cor]
-#    print(gen_docs)
-#    dictionary = gensim.corpora.Dictionary(gen_docs)
-#    
-#    corpus = [dictionary.doc2bow(gen_doc) for gen_doc in gen_docs]
-#    
-#    tf_idf = gensim.models.TfidfModel(corpus)
-#    print(tf_idf)
-#    sims = gensim.similarities.Similarity('D:/Similarity/sims',tf_idf[corpus],
-#                                          num_features=len(dictionary))
-#    print(sims)
-#    print(type(sims))
-#    file_content = jd
-#    query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
-#    query_doc_bow = dictionary.doc2bow(query_doc)
-#    query_doc_tf_idf = tf_idf[query_doc_bow]
-#    print(query_doc)
-#    print(query_doc_bow)
-#    print(query_doc_tf_idf)
-#    x=sims[query_doc_tf_idf]
-#    print(x)
-#    df = pd.DataFrame(list(zip(emails, x)), 
+
+    df = score.to_frame#pd.DataFrame(list(zip(emails, x)), 
 #               columns =['email', 'score']) 
 #    
-#    top_cand = df.nlargest(empno, 'score', keep='all')
-#    applicant = Job_Seeker
-#    applicant_selected_name = []
-#    for index, row in top_cand.iterrows():
-#        app_id = applicant.find({"email" : row['email']})
-#        fn = app_id['firstname']
-#        ln = app_id['lastname']
-#        applicant_selected_name.append(fn+ " " + ln)
+    top_cand = df.nlargest(empno, 'score', keep='all')
+    applicant = Job_Seeker
+    applicant_selected_name = []
+    for index, row in top_cand.iterrows():
+        app_id = applicant.find({"email" : row['email']})
+        fn = app_id['firstname']
+        ln = app_id['lastname']
+        applicant_selected_name.append(fn+ " " + ln)
 #    
-#    top_cand['name'] = applicant_selected_name
+    top_cand['name'] = applicant_selected_name
+    print(top_cand)
     
     return "oo"#top_cand.to_json(orient='records')
 
