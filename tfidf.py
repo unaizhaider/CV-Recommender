@@ -132,11 +132,6 @@ def tfidf(jd,empno):
     file_content = jd
     file_content = re.sub('[^a-zA-Z0-9]', ' ', file_content)
     file_content = file_content.lower()
-    file_content = file_content.split()
-    #ps = PorterStemmer()
-    #lm = WordNetLemmatizer()
-    #file_content = [lm.lemmatize(word) for word in file_content if not word in set(stopwords.words('english'))]
-    file_content = ' '.join(file_content)
     query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
     query_doc_bow = dictionary.doc2bow(query_doc)
     query_doc_tf_idf = tf_idf[query_doc_bow]
