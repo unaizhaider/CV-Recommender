@@ -112,8 +112,8 @@ def tfidf(jd,empno):
     cor = []
     for i in range(0, len(cvs)):
         review = re.sub('[^a-zA-Z0-9]', ' ', raw_documents[i])
+        review = re.sub('\uf0b7', '', review)
         review = review.lower()
-        review = ' '.join(review)
         cor.append(review)
         
     gen_docs = [[w.lower() for w in word_tokenize(text)] 
