@@ -176,9 +176,10 @@ def recommend():
     jd = x['job_description']
     emp_no = x['empNo']
     
-    recommended = tfidf(jd,emp_no)
- 
-    return recommended
+    #recommended = tfidf(jd,emp_no)
+    print(jd)
+    print(emp_no)
+    return "ok"
 
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
