@@ -108,7 +108,7 @@ def tfidf(jd,empno):
         emails.append(doc['uid']) 
         
     raw_documents = cvs
-    
+    print(cvs)
     cor = []
     for i in range(0, len(cvs)):
         review = re.sub('[^a-zA-Z0-9]', ' ', raw_documents[i])
