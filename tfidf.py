@@ -124,7 +124,7 @@ def create_tokenizer_score(new_series, train_series, tokenizer):
 def tfidf(jd,empno):
     
     cv_users = resume
-    all_users = cv_users.find()
+    all_users = cv_users.find({})
     
     cvs = []
     emails = []
