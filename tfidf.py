@@ -115,8 +115,8 @@ def tfidf(jd,empno):
         review = review.lower()
         review = review.split()
         #ps = PorterStemmer()
-        lm = WordNetLemmatizer()
-        review = [lm.lemmatize(word) for word in review if not word in set(stopwords.words('english'))]
+        #lm = WordNetLemmatizer()
+        #review = [lm.lemmatize(word) for word in review if not word in set(stopwords.words('english'))]
         review = ' '.join(review)
         cor.append(review)
         
@@ -137,8 +137,8 @@ def tfidf(jd,empno):
     file_content = file_content.lower()
     file_content = file_content.split()
     #ps = PorterStemmer()
-    lm = WordNetLemmatizer()
-    file_content = [lm.lemmatize(word) for word in file_content if not word in set(stopwords.words('english'))]
+    #lm = WordNetLemmatizer()
+    #file_content = [lm.lemmatize(word) for word in file_content if not word in set(stopwords.words('english'))]
     file_content = ' '.join(file_content)
     query_doc = [file_content.lower() for file_content in word_tokenize(file_content)]
     query_doc_bow = dictionary.doc2bow(query_doc)
