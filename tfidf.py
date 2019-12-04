@@ -388,16 +388,18 @@ def submitCV():
     #            "entities" : entities
             }
     
-    user_find = users.find({"uid" : uid}) 
     
-    if user_find:
-        user_id = users.update_one( {"uid":uid},{ "$set":{ "cv":text}, "$currentDate":{"lastModified":True} } )
-        if user_id:
-            print("update")
-    else:
-        user_id = users.insert_one(insert)
-        if user_id:
-            print("insert")
+    #user_find = users.find({"uid" : uid}) '
+    user_id = users.insert_one(insert)
+    
+#    if user_find:
+#        user_id = users.update_one( {"uid":uid},{ "$set":{ "cv":text}, "$currentDate":{"lastModified":True} } )
+#        if user_id:
+#            print("update")
+#    else:
+#        user_id = users.insert_one(insert)
+#        if user_id:
+#            print("insert")
     
     if user_id:
         print("Success")
