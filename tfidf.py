@@ -185,7 +185,7 @@ def recommend():
     recommended = tfidf(jd,emp_no)
     #print(jd)
     #print(emp_no)
-    return "ok"
+    return recommended
 
 @app.route('/register', methods=["POST"])
 @cross_origin(supports_credentials=True)
